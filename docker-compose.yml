@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: phi
+      POSTGRES_PASSWORD: phi
+      POSTGRES_DB: phi
+    ports:
+      - "5432:5432"
+    volumes:
+      - phi_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U phi -d phi"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://phi:phi@db:5432/phi
+      SECRET_KEY: dev-secret-change-me-for-production
+      MEDIA_ROOT: /app/media
+    volumes:
+      - phi_media:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  phi_pg:
+  phi_media:
