@@ -10,6 +10,9 @@ venv/
 
 # Media / uploads
 backend/media/
+backend/test_media/
+*.db
+
 
 # Flutter
 mobile/.dart_tool/

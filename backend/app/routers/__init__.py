@@ -1,8 +1,4 @@
-from fastapi import APIRouter
+from app.routers import auth, health, media, sync
 
-router = APIRouter(tags=["health"])
+__all__ = ["auth", "health", "media", "sync"]
 
-
-@router.get("/health")
-def health() -> dict:
-    return {"status": "ok"}
