@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.routers import auth, media, sync
+from app.routers import auth, media, sync, dashboard
 from app.routers.health import router as health_router
 
 settings = get_settings()
@@ -24,3 +24,4 @@ app.include_router(health_router)
 app.include_router(auth.router)
 app.include_router(sync.router)
 app.include_router(media.router)
+app.include_router(dashboard.router)
