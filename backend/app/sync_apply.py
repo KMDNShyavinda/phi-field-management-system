@@ -6,6 +6,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from app.models import (
+    Complaint,
     EvidencePhoto,
     Inspection,
     InspectionAnswer,
@@ -70,6 +71,8 @@ def apply_op(db: Session, user: User, op_type: str, payload: dict) -> None:
         _upsert_visit(db, user, payload)
     elif op_type == "upsert_premise":
         _upsert_premise(db, user, payload)
+    elif op_type == "upsert_complaint":
+        _upsert_complaint(db, user, payload)
     else:
         raise ValueError(f"Unknown op {op_type}")
 
@@ -223,5 +226,24 @@ def _upsert_premise(db: Session, user: User, payload: dict) -> None:
     row = db.get(Premise, row_id)
     if row is None:
         db.add(Premise(id=row_id, **fields, updated_at=_parse_dt(payload.get("updated_at")) or utcnow()))
+        return
+    _set_if_newer(row, payload, fields)
+
+
+def _upsert_complaint(db: Session, user: User, payload: dict) -> None:
+    row_id = _parse_uuid(payload["id"])
+    fields = {
+        "tracking_no": payload.get("tracking_no", f"C-{row_id.hex[:8]}"),
+        "premise_id": _parse_uuid(payload["premise_id"]) if payload.get("premise_id") else None,
+        "officer_id": user.id,
+        "title": payload.get("title", ""),
+        "description": payload.get("description", ""),
+        "priority": payload.get("priority", "normal"),
+        "status": payload.get("status", "pending"),
+        "received_date": _parse_date(payload.get("received_date")),
+    }
+    row = db.get(Complaint, row_id)
+    if row is None:
+        db.add(Complaint(id=row_id, **fields, updated_at=_parse_dt(payload.get("updated_at")) or utcnow()))
         return
     _set_if_newer(row, payload, fields)

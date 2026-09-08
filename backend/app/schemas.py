@@ -158,6 +158,21 @@ class SignatureOut(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class ComplaintOut(BaseModel):
+    id: uuid.UUID
+    tracking_no: str
+    premise_id: uuid.UUID | None = None
+    officer_id: uuid.UUID | None = None
+    title: str
+    description: str
+    priority: str
+    status: str
+    received_date: date
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
 class PullResponse(BaseModel):
     server_time: datetime
     users: list[UserOut]
@@ -170,6 +185,7 @@ class PullResponse(BaseModel):
     evidence_photos: list[EvidencePhotoOut]
     violations: list[ViolationOut]
     signatures: list[SignatureOut]
+    complaints: list[ComplaintOut] = []
 
 
 OpType = Literal[
@@ -179,6 +195,8 @@ OpType = Literal[
     "upsert_violation",
     "upsert_signature",
     "upsert_visit",
+    "upsert_premise",
+    "upsert_complaint",
 ]
 
 

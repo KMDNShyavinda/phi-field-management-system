@@ -44,6 +44,7 @@ class SyncService {
     await _upsertList('evidence_photos', payload['evidence_photos']);
     await _upsertList('violations', payload['violations']);
     await _upsertList('signatures', payload['signatures']);
+    await _upsertList('complaints', payload['complaints']);
     final serverTime = payload['server_time'] as String? ?? DateTime.now().toUtc().toIso8601String();
     await _db.setMeta('last_pulled_at', serverTime);
   }

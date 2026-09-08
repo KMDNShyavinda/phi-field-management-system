@@ -8,6 +8,7 @@ from app.database import get_db
 from app.models import (
     ChecklistItem,
     ChecklistTemplate,
+    Complaint,
     EvidencePhoto,
     Inspection,
     InspectionAnswer,
@@ -20,6 +21,7 @@ from app.models import (
 from app.schemas import (
     ChecklistItemOut,
     ChecklistTemplateOut,
+    ComplaintOut,
     EvidencePhotoOut,
     InspectionAnswerOut,
     InspectionOut,
@@ -90,6 +92,12 @@ def pull(
             since,
         ).all()
 
+    complaints = _since_filter(
+        db.query(Complaint).filter(Complaint.officer_id == user.id),
+        Complaint,
+        since,
+    ).all()
+
     return PullResponse(
         server_time=datetime.utcnow(),
         users=[UserOut.model_validate(user)],
@@ -102,6 +110,7 @@ def pull(
         evidence_photos=[EvidencePhotoOut.model_validate(row) for row in photos],
         violations=[ViolationOut.model_validate(row) for row in violations],
         signatures=[SignatureOut.model_validate(row) for row in signatures],
+        complaints=[ComplaintOut.model_validate(row) for row in complaints],
     )
 
 
