@@ -9,6 +9,7 @@ from app.models import (
     EvidencePhoto,
     Inspection,
     InspectionAnswer,
+    Premise,
     ScheduledVisit,
     Signature,
     User,
@@ -67,6 +68,8 @@ def apply_op(db: Session, user: User, op_type: str, payload: dict) -> None:
         _upsert_signature(db, user, payload)
     elif op_type == "upsert_visit":
         _upsert_visit(db, user, payload)
+    elif op_type == "upsert_premise":
+        _upsert_premise(db, user, payload)
     else:
         raise ValueError(f"Unknown op {op_type}")
 
@@ -200,4 +203,25 @@ def _upsert_visit(db: Session, user: User, payload: dict) -> None:
         return
     if row.officer_id != user.id:
         raise ValueError("Cannot overwrite another officer's visit")
+    _set_if_newer(row, payload, fields)
+
+
+def _upsert_premise(db: Session, user: User, payload: dict) -> None:
+    row_id = _parse_uuid(payload["id"])
+    fields = {
+        "name": payload.get("name", ""),
+        "address": payload.get("address", ""),
+        "owner_name": payload.get("owner_name", ""),
+        "owner_phone": payload.get("owner_phone"),
+        "qr_code": payload.get("qr_code", ""),
+        "latitude": payload.get("latitude", 0.0),
+        "longitude": payload.get("longitude", 0.0),
+        "risk": payload.get("risk", "medium"),
+        "moh_area": payload.get("moh_area", user.moh_area),
+        "compliance_score": payload.get("compliance_score", 70),
+    }
+    row = db.get(Premise, row_id)
+    if row is None:
+        db.add(Premise(id=row_id, **fields, updated_at=_parse_dt(payload.get("updated_at")) or utcnow()))
+        return
     _set_if_newer(row, payload, fields)
