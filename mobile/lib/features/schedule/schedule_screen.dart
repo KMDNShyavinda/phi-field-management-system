@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../core/theme.dart';
 import '../../domain/models.dart';
 import '../../providers.dart';
+import '../dashboard/dashboard_stats_widget.dart';
 import '../premise/premise_screen.dart';
 import '../scan/scan_screen.dart';
 
@@ -85,6 +86,8 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                 if (session != null) Text('${session.fullName} · ${session.mohArea}'),
                 if (_status != null) Padding(padding: const EdgeInsets.only(top: 8), child: Text(_status!)),
                 const SizedBox(height: 16),
+                const DashboardStatsWidget(),
+                const SizedBox(height: 24),
                 Text("Today's visits", style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 if (todayVisits.isEmpty) const Text('No programmed visits in local storage. Sync after login.'),
