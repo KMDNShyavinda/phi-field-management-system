@@ -4,12 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme.dart';
 import '../../domain/models.dart';
 import '../../providers.dart';
+import 'complaint_details_screen.dart';
 
-class ComplaintListScreen extends ConsumerWidget {
+class ComplaintListScreen extends ConsumerStatefulWidget {
   const ComplaintListScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ComplaintListScreen> createState() => _ComplaintListScreenState();
+}
+
+class _ComplaintListScreenState extends ConsumerState<ComplaintListScreen> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Complaints')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
@@ -44,11 +50,16 @@ class ComplaintListScreen extends ConsumerWidget {
                   subtitle: Text('${complaint.trackingNo} - ${complaint.status.toUpperCase()}\n${complaint.description}'),
                   isThreeLine: true,
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    // Navigate to complaint details (To be implemented)
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Complaint details screen coming soon')),
+                  onTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ComplaintDetailsScreen(complaint: complaint),
+                      ),
                     );
+                    if (result == true && mounted) {
+                      setState(() {});
+                    }
                   },
                 ),
               );
