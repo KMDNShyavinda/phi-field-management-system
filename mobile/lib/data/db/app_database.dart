@@ -160,6 +160,20 @@ class AppDatabase {
       )
     ''');
     await db.execute('''
+      CREATE TABLE complaints (
+        id TEXT PRIMARY KEY,
+        tracking_no TEXT,
+        premise_id TEXT,
+        officer_id TEXT,
+        title TEXT,
+        description TEXT,
+        priority TEXT,
+        status TEXT,
+        received_date TEXT,
+        updated_at TEXT
+      )
+    ''');
+    await db.execute('''
       CREATE TABLE sync_meta (
         key TEXT PRIMARY KEY,
         value TEXT

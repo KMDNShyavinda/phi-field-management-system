@@ -175,3 +175,17 @@ class Signature(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, onupdate=utcnow)
 
     inspection: Mapped[Inspection] = relationship(back_populates="signatures")
+
+class Complaint(Base):
+    __tablename__ = "complaints"
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    tracking_no: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+    premise_id: Mapped[uuid.UUID | None] = mapped_column(Uuid, ForeignKey("premises.id"), nullable=True)
+    officer_id: Mapped[uuid.UUID | None] = mapped_column(Uuid, ForeignKey("users.id"), nullable=True)
+    title: Mapped[str] = mapped_column(String(255))
+    description: Mapped[str] = mapped_column(Text)
+    priority: Mapped[str] = mapped_column(String(32), default="normal") # normal, high, emergency
+    status: Mapped[str] = mapped_column(String(32), default="pending") # pending, investigating, resolved
+    received_date: Mapped[date] = mapped_column(Date, default=date.today)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, onupdate=utcnow)

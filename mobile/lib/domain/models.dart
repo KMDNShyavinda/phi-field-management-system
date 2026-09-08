@@ -198,3 +198,56 @@ class InspectionRecord {
     );
   }
 }
+
+class Complaint {
+  const Complaint({
+    required this.id,
+    required this.trackingNo,
+    this.premiseId,
+    this.officerId,
+    required this.title,
+    required this.description,
+    required this.priority,
+    required this.status,
+    required this.receivedDate,
+  });
+
+  final String id;
+  final String trackingNo;
+  final String? premiseId;
+  final String? officerId;
+  final String title;
+  final String description;
+  final String priority;
+  final String status;
+  final String receivedDate;
+
+  factory Complaint.fromMap(Map<String, dynamic> map) {
+    return Complaint(
+      id: map['id'] as String,
+      trackingNo: map['tracking_no'] as String,
+      premiseId: map['premise_id'] as String?,
+      officerId: map['officer_id'] as String?,
+      title: map['title'] as String,
+      description: map['description'] as String,
+      priority: map['priority'] as String,
+      status: map['status'] as String,
+      receivedDate: map['received_date'] as String,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'tracking_no': trackingNo,
+      'premise_id': premiseId,
+      'officer_id': officerId,
+      'title': title,
+      'description': description,
+      'priority': priority,
+      'status': status,
+      'received_date': receivedDate,
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+    };
+  }
+}

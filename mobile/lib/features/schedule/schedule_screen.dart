@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../core/theme.dart';
 import '../../domain/models.dart';
 import '../../providers.dart';
+import '../complaints/complaint_list_screen.dart';
 import '../dashboard/dashboard_stats_widget.dart';
 import '../premise/add_premise_screen.dart';
 import '../premise/premise_screen.dart';
@@ -69,6 +70,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             icon: _syncing
                 ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                 : const Icon(Icons.cloud_sync),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const ComplaintListScreen()));
+            },
+            icon: const Icon(Icons.report_problem),
+            tooltip: 'Complaints',
           ),
           IconButton(onPressed: _logout, icon: const Icon(Icons.logout)),
         ],
