@@ -6,6 +6,7 @@ import '../../core/theme.dart';
 import '../../domain/models.dart';
 import '../../providers.dart';
 import '../dashboard/dashboard_stats_widget.dart';
+import '../premise/add_premise_screen.dart';
 import '../premise/premise_screen.dart';
 import '../scan/scan_screen.dart';
 
@@ -56,6 +57,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
       appBar: AppBar(
         title: const Text('Daily schedule'),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AddPremiseScreen()));
+            },
+            icon: const Icon(Icons.add_business),
+            tooltip: 'Add Establishment',
+          ),
           IconButton(
             onPressed: _syncing ? null : _sync,
             icon: _syncing
