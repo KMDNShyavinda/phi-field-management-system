@@ -88,3 +88,65 @@ def get_admin_dashboard_stats(db: Session = Depends(get_db), current_user: User 
         "total_officers": total_officers,
         "moh_area": current_user.moh_area
     }
+
+@router.get("/complaints")
+def get_all_complaints(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Returns all complaints for the admin dashboard.
+    """
+    from app.models import Complaint
+    # Ideally filter by MOH area if current_user is just MOH, but for MVP returning all or area specific
+    complaints = db.query(Complaint).order_by(Complaint.received_date.desc()).all()
+    
+    result = []
+    for c in complaints:
+        result.append({
+            "id": c.id,
+            "tracking_no": c.tracking_no,
+            "title": c.title,
+            "description": c.description,
+            "priority": c.priority,
+            "status": c.status,
+            "received_date": c.received_date,
+            "updated_at": c.updated_at
+        })
+    return result
+
+@router.get("/officers")
+def get_all_officers(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Returns all PHI officers.
+    """
+    officers = db.query(User).filter(User.role == "phi").all()
+    
+    result = []
+    for o in officers:
+        result.append({
+            "id": o.id,
+            "full_name": o.full_name,
+            "email": o.email,
+            "moh_area": o.moh_area,
+            "is_active": o.is_active
+        })
+    return result
+
+@router.get("/inspections")
+def get_all_inspections(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Returns all inspections.
+    """
+    inspections = db.query(Inspection).order_by(Inspection.started_at.desc()).all()
+    
+    result = []
+    for i in inspections:
+        premise = db.query(Premise).filter(Premise.id == i.premise_id).first()
+        officer = db.query(User).filter(User.id == i.officer_id).first()
+        result.append({
+            "id": i.id,
+            "premise_name": premise.name if premise else "Unknown",
+            "officer_name": officer.full_name if officer else "Unknown",
+            "started_at": i.started_at,
+            "ended_at": i.ended_at,
+            "compliance_score": i.compliance_score
+        })
+    return result

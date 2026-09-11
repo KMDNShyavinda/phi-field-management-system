@@ -14,12 +14,9 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
     setLoading(true);
     setError('');
     try {
-      const params = new URLSearchParams();
-      params.append('username', email);
-      params.append('password', password);
-      
-      const res = await apiClient.post('/auth/token', params, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      const res = await apiClient.post('/auth/login', {
+        email: email,
+        password: password
       });
       localStorage.setItem('token', res.data.access_token);
       onLogin();
@@ -137,6 +134,221 @@ function DashboardLayout({ children, onLogout }: { children: React.ReactNode, on
   );
 }
 
+function InspectionsList() {
+  const [inspections, setInspections] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchInspections() {
+      try {
+        const res = await apiClient.get('/dashboard/inspections');
+        setInspections(res.data);
+      } catch (err) {
+        console.error('Failed to fetch inspections', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchInspections();
+  }, []);
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-64"><Loader2 className="w-8 h-8 animate-spin text-blue-500" /></div>;
+  }
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">Field Inspections</h2>
+      </div>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Premise</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PHI Officer</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {inspections.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-4 text-center text-gray-500">No inspections found.</td>
+              </tr>
+            ) : (
+              inspections.map((i) => (
+                <tr key={i.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{i.premise_name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{i.officer_name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(i.started_at).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      i.compliance_score >= 80 ? 'bg-green-100 text-green-800' :
+                      i.compliance_score >= 50 ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {i.compliance_score !== null ? `${i.compliance_score}%` : 'N/A'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button className="text-blue-600 hover:text-blue-900">View Report</button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function OfficersList() {
+  const [officers, setOfficers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchOfficers() {
+      try {
+        const res = await apiClient.get('/dashboard/officers');
+        setOfficers(res.data);
+      } catch (err) {
+        console.error('Failed to fetch officers', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchOfficers();
+  }, []);
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-64"><Loader2 className="w-8 h-8 animate-spin text-blue-500" /></div>;
+  }
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">PHI Officers</h2>
+        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+          + Add New Officer
+        </button>
+      </div>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MOH Area</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {officers.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="px-6 py-4 text-center text-gray-500">No officers found.</td>
+              </tr>
+            ) : (
+              officers.map((o) => (
+                <tr key={o.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{o.full_name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{o.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{o.moh_area || 'Not assigned'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      o.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {o.is_active ? 'ACTIVE' : 'INACTIVE'}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function ComplaintsList() {
+  const [complaints, setComplaints] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchComplaints() {
+      try {
+        const res = await apiClient.get('/dashboard/complaints');
+        setComplaints(res.data);
+      } catch (err) {
+        console.error('Failed to fetch complaints', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchComplaints();
+  }, []);
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-64"><Loader2 className="w-8 h-8 animate-spin text-blue-500" /></div>;
+  }
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold mb-6">Complaints Management</h2>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tracking No</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Received Date</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {complaints.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-4 text-center text-gray-500">No complaints found.</td>
+              </tr>
+            ) : (
+              complaints.map((c) => (
+                <tr key={c.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">{c.tracking_no}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{c.title}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      c.priority === 'emergency' ? 'bg-red-100 text-red-800' :
+                      c.priority === 'high' ? 'bg-orange-100 text-orange-800' :
+                      'bg-green-100 text-green-800'
+                    }`}>
+                      {c.priority.toUpperCase()}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      c.status === 'resolved' ? 'bg-green-100 text-green-800' :
+                      'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {c.status.toUpperCase()}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {new Date(c.received_date).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function DashboardHome() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -219,7 +431,11 @@ function App() {
       <DashboardLayout onLogout={handleLogout}>
         <Routes>
           <Route path="/" element={<DashboardHome />} />
-          <Route path="*" element={<div className="text-gray-500">Feature under construction</div>} />
+          <Route path="/overview" element={<DashboardHome />} />
+          <Route path="/officers" element={<OfficersList />} />
+          <Route path="/inspections" element={<InspectionsList />} />
+          <Route path="/complaints" element={<ComplaintsList />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </DashboardLayout>
     </Router>
