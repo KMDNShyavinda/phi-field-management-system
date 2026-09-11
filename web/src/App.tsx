@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, FileText, AlertTriangle, Settings, LogOut, Loader2 } from 'lucide-react';
+import { LayoutDashboard, Users, FileText, AlertTriangle, Settings, LogOut, Loader2, Download } from 'lucide-react';
 import { apiClient } from './api';
+import { generateInspectionsPDF, generateComplaintsPDF, generateOfficersPDF } from './pdfReports';
 
 function LoginScreen({ onLogin }: { onLogin: () => void }) {
   const [email, setEmail] = useState('phi@moh.lk'); // Default for demo
@@ -160,6 +161,13 @@ function InspectionsList() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Field Inspections</h2>
+        <button
+          onClick={() => generateInspectionsPDF(inspections)}
+          className="flex items-center bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg text-sm font-medium"
+        >
+          <Download className="w-4 h-4 mr-2" />
+          Download PDF
+        </button>
       </div>
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
@@ -231,9 +239,18 @@ function OfficersList() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">PHI Officers</h2>
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-          + Add New Officer
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => generateOfficersPDF(officers)}
+            className="flex items-center bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg text-sm font-medium"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Download PDF
+          </button>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+            + Add New Officer
+          </button>
+        </div>
       </div>
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
@@ -297,7 +314,16 @@ function ComplaintsList() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">Complaints Management</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">Complaints Management</h2>
+        <button
+          onClick={() => generateComplaintsPDF(complaints)}
+          className="flex items-center bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg text-sm font-medium"
+        >
+          <Download className="w-4 h-4 mr-2" />
+          Download PDF
+        </button>
+      </div>
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
