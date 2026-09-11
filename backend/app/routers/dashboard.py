@@ -50,3 +50,41 @@ def get_dashboard_stats(db: Session = Depends(get_db), current_user: User = Depe
         "monthly_violations": monthly_violations,
         "moh_area": current_user.moh_area
     }
+
+@router.get("/admin_stats")
+def get_admin_dashboard_stats(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Returns aggregate statistics for the Admin/MOH Dashboard.
+    """
+    from app.models import Complaint
+    today = date.today()
+    current_month = today.replace(day=1)
+    
+    # 1. Total Inspections this month (Global or MOH specific)
+    total_inspections = db.query(Inspection).filter(
+        Inspection.started_at >= current_month
+    ).count()
+
+    # 2. Active Complaints
+    active_complaints_query = db.query(Complaint).filter(
+        Complaint.status.in_(["pending", "investigating"])
+    )
+    active_complaints = active_complaints_query.count()
+    emergency_complaints = active_complaints_query.filter(Complaint.priority.in_(["emergency", "critical"])).count()
+
+    # 3. Violations Issued (Requires follow up - simply unaccepted or open, here we just count month)
+    violations_issued = db.query(Violation).filter(
+        Violation.updated_at >= current_month
+    ).count()
+
+    # 4. Total PHI Officers
+    total_officers = db.query(User).filter(User.role == "phi").count()
+
+    return {
+        "total_inspections_month": total_inspections,
+        "active_complaints": active_complaints,
+        "emergency_complaints": emergency_complaints,
+        "violations_issued": violations_issued,
+        "total_officers": total_officers,
+        "moh_area": current_user.moh_area
+    }
