@@ -413,6 +413,126 @@ function DashboardHome() {
   );
 }
 
+function SettingsPage() {
+  const [activeTab, setActiveTab] = useState('profile');
+  const [saved, setSaved] = useState(false);
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold mb-6">System Settings</h2>
+      
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex">
+        {/* Settings Sidebar */}
+        <div className="w-64 bg-gray-50 border-r border-gray-200 p-4 min-h-[500px]">
+          <ul className="space-y-2">
+            <li>
+              <button 
+                onClick={() => setActiveTab('profile')}
+                className={`w-full text-left px-4 py-2 rounded-lg font-medium ${activeTab === 'profile' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                Profile Settings
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={() => setActiveTab('system')}
+                className={`w-full text-left px-4 py-2 rounded-lg font-medium ${activeTab === 'system' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                System Preferences
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={() => setActiveTab('backup')}
+                className={`w-full text-left px-4 py-2 rounded-lg font-medium ${activeTab === 'backup' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                Data & Backup
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        {/* Settings Content */}
+        <div className="flex-1 p-8">
+          {saved && (
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
+              Settings saved successfully!
+            </div>
+          )}
+
+          {activeTab === 'profile' && (
+            <form onSubmit={handleSave} className="space-y-6 max-w-lg">
+              <h3 className="text-lg font-semibold border-b pb-2">Admin Profile</h3>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <input type="text" defaultValue="MOH Admin" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <input type="email" defaultValue="phi@moh.lk" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Change Password</label>
+                <input type="password" placeholder="Enter new password" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">Save Profile</button>
+            </form>
+          )}
+
+          {activeTab === 'system' && (
+            <form onSubmit={handleSave} className="space-y-6 max-w-lg">
+              <h3 className="text-lg font-semibold border-b pb-2">System Preferences</h3>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Default MOH Area</label>
+                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                  <option>Colombo MOH</option>
+                  <option>Gampaha MOH</option>
+                  <option>Kandy MOH</option>
+                </select>
+              </div>
+              <div className="flex items-center">
+                <input type="checkbox" id="email_notif" defaultChecked className="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+                <label htmlFor="email_notif" className="ml-2 block text-sm text-gray-700">Receive email alerts for Emergency Complaints</label>
+              </div>
+              <div className="flex items-center">
+                <input type="checkbox" id="sms_notif" className="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+                <label htmlFor="sms_notif" className="ml-2 block text-sm text-gray-700">Receive SMS alerts for Critical Violations</label>
+              </div>
+              <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">Save Preferences</button>
+            </form>
+          )}
+
+          {activeTab === 'backup' && (
+            <div className="space-y-6 max-w-lg">
+              <h3 className="text-lg font-semibold border-b pb-2">Data & Backup</h3>
+              <p className="text-sm text-gray-600">Export your entire system database for local safekeeping or auditing purposes.</p>
+              
+              <div className="p-4 border border-blue-200 bg-blue-50 rounded-lg flex items-start">
+                <FileText className="w-6 h-6 text-blue-600 mt-1 mr-3" />
+                <div>
+                  <h4 className="font-semibold text-blue-900">Download Database Backup</h4>
+                  <p className="text-sm text-blue-700 mt-1 mb-3">Generates a complete SQLite (.db) or CSV export of all inspections, complaints, and officer data.</p>
+                  <button className="bg-white border border-blue-300 text-blue-700 hover:bg-blue-50 px-4 py-2 rounded-lg font-medium text-sm">
+                    Generate Export
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('token'));
 
@@ -435,6 +555,7 @@ function App() {
           <Route path="/officers" element={<OfficersList />} />
           <Route path="/inspections" element={<InspectionsList />} />
           <Route path="/complaints" element={<ComplaintsList />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </DashboardLayout>
