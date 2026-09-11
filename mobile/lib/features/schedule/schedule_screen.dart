@@ -10,6 +10,7 @@ import '../dashboard/dashboard_stats_widget.dart';
 import '../premise/add_premise_screen.dart';
 import '../premise/premise_screen.dart';
 import '../scan/scan_screen.dart';
+import '../map/map_screen.dart';
 
 class ScheduleScreen extends ConsumerStatefulWidget {
   const ScheduleScreen({super.key});
@@ -25,13 +26,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
   Future<void> _sync() async {
     setState(() {
       _syncing = true;
-      _status = 'Syncing…';
+      _status = 'Syncing...';
     });
     try {
       await ref.read(syncServiceProvider).syncNow();
       setState(() => _status = 'Synced');
     } catch (error) {
-      setState(() => _status = 'Offline — using local records. $error');
+      setState(() => _status = 'Offline - using local records. $error');
     } finally {
       if (mounted) setState(() => _syncing = false);
     }
@@ -50,13 +51,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final session = ref.watch(sessionProvider).valueOrNull;
+    final session = ref.watch(sessionProvider).value;
     ref.watch(dataTickProvider);
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Daily schedule'),
+        title: const Text('My Schedule'),
         actions: [
           IconButton(
             onPressed: () {
@@ -64,6 +65,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             },
             icon: const Icon(Icons.add_business),
             tooltip: 'Add Establishment',
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const OfflineMapScreen()));
+            },
+            icon: const Icon(Icons.map),
+            tooltip: 'Offline Maps',
           ),
           IconButton(
             onPressed: _syncing ? null : _sync,
