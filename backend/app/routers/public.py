@@ -28,7 +28,7 @@ class PublicComplaintResponse(BaseModel):
 @router.get("/areas", response_model=List[str])
 def get_moh_areas(db: Session = Depends(get_db)):
     """Fetch distinct MOH areas that have assigned PHI officers."""
-    areas = db.query(User.moh_area).filter(User.role == "phi", User.is_active == True).distinct().all()
+    areas = db.query(User.moh_area).filter(User.role == "phi").distinct().all()
     return sorted([area[0] for area in areas if area[0]])
 
 @router.post("/complaints", response_model=PublicComplaintResponse)
@@ -53,8 +53,7 @@ def submit_public_complaint(
         # Auto-assign to a PHI in the selected MOH area
         officer = db.query(User).filter(
             User.role == "phi", 
-            User.moh_area == complaint.moh_area,
-            User.is_active == True
+            User.moh_area == complaint.moh_area
         ).first()
 
         db_complaint = Complaint(
