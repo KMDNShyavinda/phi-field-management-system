@@ -130,6 +130,37 @@ class InspectionRepository {
     );
   }
 
+  Future<Map<String, dynamic>?> getPreviousPhoto({
+    required String inspectionId,
+    required String itemId,
+  }) async {
+    // Get current inspection to find premise_id
+    final currentInsp = await _db.getById('inspections', inspectionId);
+    if (currentInsp == null) return null;
+    final premiseId = currentInsp['premise_id'] as String;
+
+    // Get previous completed inspections for this premise
+    final pastInspections = await _db.query(
+      'inspections',
+      where: "premise_id = ? AND status = 'completed'",
+      whereArgs: [premiseId],
+      orderBy: 'completed_at DESC'
+    );
+
+    // Look for a photo for this specific item in past inspections
+    for (final insp in pastInspections) {
+      final photos = await _db.query(
+        'evidence_photos',
+        where: "inspection_id = ? AND item_id = ?",
+        whereArgs: [insp['id'] as String, itemId]
+      );
+      if (photos.isNotEmpty) {
+        return photos.first;
+      }
+    }
+    return null;
+  }
+
   Future<List<Map<String, dynamic>>> suggestedViolations(String inspectionId) async {
     final answers = await _db.all('inspection_answers', where: 'inspection_id = ?', args: [inspectionId]);
     final items = {for (final item in await _db.all('checklist_items')) item['id']: item};

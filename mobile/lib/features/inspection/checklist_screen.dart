@@ -87,25 +87,61 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                         TextField(
                           controller: _notes.putIfAbsent(item.id, TextEditingController.new),
                           decoration: const InputDecoration(labelText: 'Notes'),
+                          onChanged: (val) {
+                            if (_results[item.id] != null) {
+                              _setResult(item, _results[item.id]!);
+                            }
+                          },
                         ),
-                        TextButton.icon(
-                          onPressed: () async {
-                            final picker = ImagePicker();
-                            final picked = await picker.pickImage(source: ImageSource.camera) ??
-                                await picker.pickImage(source: ImageSource.gallery);
-                            if (picked == null) return;
-                            await ref.read(inspectionRepositoryProvider).attachPhoto(
-                                  inspectionId: widget.inspectionId,
-                                  itemId: item.id,
-                                  source: File(picked.path),
-                                );
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Photo stored with GPS/time hash')),
+                        const SizedBox(height: 12),
+                        FutureBuilder<Map<String, dynamic>?>(
+                          future: ref.read(inspectionRepositoryProvider).getPreviousPhoto(
+                                inspectionId: widget.inspectionId,
+                                itemId: item.id,
+                              ),
+                          builder: (context, photoSnap) {
+                            final prevPhoto = photoSnap.data;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (prevPhoto != null && prevPhoto['storage_path'] != null) ...[
+                                  const Text('Before (Last Inspection):', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+                                  const SizedBox(height: 4),
+                                  Container(
+                                    height: 120,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      image: DecorationImage(
+                                        image: FileImage(File(prevPhoto['storage_path'] as String)),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                ],
+                                OutlinedButton.icon(
+                                  onPressed: () async {
+                                    final picker = ImagePicker();
+                                    final picked = await picker.pickImage(source: ImageSource.camera) ??
+                                        await picker.pickImage(source: ImageSource.gallery);
+                                    if (picked == null) return;
+                                    await ref.read(inspectionRepositoryProvider).attachPhoto(
+                                          inspectionId: widget.inspectionId,
+                                          itemId: item.id,
+                                          source: File(picked.path),
+                                        );
+                                    if (!context.mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Photo stored with GPS/time hash')),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.camera_alt),
+                                  label: Text(prevPhoto != null ? 'Take "After" photo' : 'Attach evidence photo'),
+                                ),
+                              ],
                             );
                           },
-                          icon: const Icon(Icons.camera_alt),
-                          label: const Text('Attach evidence photo'),
                         ),
                       ],
                     ),
