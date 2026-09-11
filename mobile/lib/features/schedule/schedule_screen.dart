@@ -12,6 +12,8 @@ import '../premise/premise_screen.dart';
 import '../scan/scan_screen.dart';
 import '../map/map_screen.dart';
 
+import 'package:table_calendar/table_calendar.dart';
+
 class ScheduleScreen extends ConsumerStatefulWidget {
   const ScheduleScreen({super.key});
 
@@ -22,6 +24,8 @@ class ScheduleScreen extends ConsumerStatefulWidget {
 class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
   String? _status;
   bool _syncing = false;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay = DateTime.now();
 
   Future<void> _sync() async {
     setState(() {
@@ -53,7 +57,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
   Widget build(BuildContext context) {
     final session = ref.watch(sessionProvider).value;
     ref.watch(dataTickProvider);
-    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
     return Scaffold(
       appBar: AppBar(
@@ -100,27 +103,100 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
         future: ref.read(dbProvider).all('scheduled_visits', orderBy: 'visit_date, reason'),
         builder: (context, snapshot) {
           final visits = snapshot.data ?? [];
-          final todayVisits = visits.where((row) => row['visit_date'] == today).toList();
-          final followUps = visits.where((row) => row['reason'] == 'follow_up').toList();
+          
+          // Group visits by date for the calendar
+          final Map<String, List<Map<String, dynamic>>> events = {};
+          for (final v in visits) {
+            final dateStr = v['visit_date'] as String;
+            events.putIfAbsent(dateStr, () => []).add(v);
+          }
+          
+          List<Map<String, dynamic>> _getEventsForDay(DateTime day) {
+            final dateStr = DateFormat('yyyy-MM-dd').format(day);
+            return events[dateStr] ?? [];
+          }
+
+          final selectedDateStr = DateFormat('yyyy-MM-dd').format(_selectedDay ?? _focusedDay);
+          final selectedVisits = events[selectedDateStr] ?? [];
+
           return RefreshIndicator(
             onRefresh: _sync,
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                if (session != null) Text('${session.fullName} · ${session.mohArea}'),
-                if (_status != null) Padding(padding: const EdgeInsets.only(top: 8), child: Text(_status!)),
-                const SizedBox(height: 16),
-                const DashboardStatsWidget(),
-                const SizedBox(height: 24),
-                Text("Today's visits", style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 8),
-                if (todayVisits.isEmpty) const Text('No programmed visits in local storage. Sync after login.'),
-                for (final visit in todayVisits) _VisitTile(visit: visit),
-                const SizedBox(height: 24),
-                Text('Follow-ups', style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 8),
-                if (followUps.isEmpty) const Text('No follow-up inspections queued.'),
-                for (final visit in followUps) _VisitTile(visit: visit),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (session != null) Text('${session.fullName} • ${session.mohArea}'),
+                        if (_status != null) Padding(padding: const EdgeInsets.only(top: 8), child: Text(_status!)),
+                        const SizedBox(height: 16),
+                        const DashboardStatsWidget(),
+                        const SizedBox(height: 16),
+                        
+                        // Calendar Widget
+                        Card(
+                          elevation: 2,
+                          child: TableCalendar(
+                            firstDay: DateTime.utc(2020, 1, 1),
+                            lastDay: DateTime.utc(2030, 12, 31),
+                            focusedDay: _focusedDay,
+                            calendarFormat: CalendarFormat.month,
+                            availableCalendarFormats: const {
+                              CalendarFormat.month: 'Month',
+                              CalendarFormat.twoWeeks: '2 Weeks',
+                              CalendarFormat.week: 'Week',
+                            },
+                            eventLoader: _getEventsForDay,
+                            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                            onDaySelected: (selectedDay, focusedDay) {
+                              setState(() {
+                                _selectedDay = selectedDay;
+                                _focusedDay = focusedDay;
+                              });
+                            },
+                            calendarStyle: CalendarStyle(
+                              markerDecoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                shape: BoxShape.circle,
+                              ),
+                              todayDecoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                shape: BoxShape.circle,
+                              ),
+                              selectedDecoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          'Visits for $selectedDateStr',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: 8),
+                        if (selectedVisits.isEmpty) 
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Text('No programmed visits for this day.'),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => _VisitTile(visit: selectedVisits[index]),
+                      childCount: selectedVisits.length,
+                    ),
+                  ),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 80)), // FAB padding
               ],
             ),
           );
