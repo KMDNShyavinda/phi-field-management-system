@@ -140,19 +140,19 @@ class InspectionRepository {
     final premiseId = currentInsp['premise_id'] as String;
 
     // Get previous completed inspections for this premise
-    final pastInspections = await _db.query(
+    final pastInspections = await _db.all(
       'inspections',
       where: "premise_id = ? AND status = 'completed'",
-      whereArgs: [premiseId],
+      args: [premiseId],
       orderBy: 'completed_at DESC'
     );
 
     // Look for a photo for this specific item in past inspections
     for (final insp in pastInspections) {
-      final photos = await _db.query(
+      final photos = await _db.all(
         'evidence_photos',
         where: "inspection_id = ? AND item_id = ?",
-        whereArgs: [insp['id'] as String, itemId]
+        args: [insp['id'] as String, itemId]
       );
       if (photos.isNotEmpty) {
         return photos.first;
