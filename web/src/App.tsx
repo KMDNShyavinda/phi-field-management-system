@@ -5,20 +5,28 @@ import { apiClient } from './api';
 import { generateInspectionsPDF, generateComplaintsPDF, generateOfficersPDF } from './pdfReports';
 
 function LoginScreen({ onLogin }: { onLogin: () => void }) {
-  const [email, setEmail] = useState('phi@moh.lk'); // Default for demo
+  const [email, setEmail] = useState('phi@moh.lk');
   const [password, setPassword] = useState('phi12345');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Forgot password state
+  const [showForgot, setShowForgot] = useState(false);
+  const [forgotStep, setForgotStep] = useState<'email' | 'otp' | 'newpass'>('email');
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [forgotMsg, setForgotMsg] = useState('');
+  const [forgotError, setForgotError] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [displayOtp, setDisplayOtp] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-      const res = await apiClient.post('/auth/login', {
-        email: email,
-        password: password
-      });
+      const res = await apiClient.post('/auth/login', { email, password });
       localStorage.setItem('token', res.data.access_token);
       onLogin();
     } catch (err: any) {
@@ -26,6 +34,70 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRequestOtp = async () => {
+    setForgotLoading(true);
+    setForgotError('');
+    setForgotMsg('');
+    try {
+      const res = await apiClient.post('/auth/request-otp', { email: forgotEmail });
+      setForgotMsg(res.data.message);
+      if (res.data.otp_code) setDisplayOtp(res.data.otp_code);
+      setForgotStep('otp');
+    } catch (err: any) {
+      setForgotError(err.response?.data?.detail || 'Failed to send OTP.');
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    setForgotLoading(true);
+    setForgotError('');
+    try {
+      await apiClient.post('/auth/verify-otp', { email: forgotEmail, otp_code: otpCode });
+      setForgotMsg('OTP verified! Enter your new password.');
+      setForgotStep('newpass');
+    } catch (err: any) {
+      setForgotError(err.response?.data?.detail || 'Invalid OTP.');
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    setForgotLoading(true);
+    setForgotError('');
+    try {
+      // Request a fresh OTP for the reset call
+      const otpRes = await apiClient.post('/auth/request-otp', { email: forgotEmail });
+      const freshOtp = otpRes.data.otp_code;
+      await apiClient.post('/auth/reset-password', {
+        email: forgotEmail,
+        otp_code: freshOtp,
+        new_password: newPassword
+      });
+      setForgotMsg('Password reset successfully! You can now login.');
+      setTimeout(() => {
+        setShowForgot(false);
+        setForgotStep('email');
+        setForgotMsg('');
+        setDisplayOtp('');
+      }, 2000);
+    } catch (err: any) {
+      setForgotError(err.response?.data?.detail || 'Failed to reset password.');
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  const closeForgot = () => {
+    setShowForgot(false);
+    setForgotStep('email');
+    setForgotError('');
+    setForgotMsg('');
+    setDisplayOtp('');
   };
 
   return (
@@ -63,6 +135,11 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
               />
             </div>
           </div>
+          <div className="flex items-center justify-end">
+            <button type="button" onClick={() => setShowForgot(true)} className="text-sm text-blue-600 hover:text-blue-500">
+              Forgot your password?
+            </button>
+          </div>
           <div>
             <button
               type="submit"
@@ -74,6 +151,88 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
           </div>
         </form>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgot && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-gray-900">Reset Password</h3>
+              <button onClick={closeForgot} className="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            </div>
+
+            {forgotMsg && <div className="mb-4 p-3 bg-green-50 text-green-700 rounded-lg text-sm">{forgotMsg}</div>}
+            {forgotError && <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm">{forgotError}</div>}
+
+            {forgotStep === 'email' && (
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600">Enter your email address to receive an OTP code.</p>
+                <input
+                  type="email"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Email address"
+                  value={forgotEmail}
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                />
+                <button
+                  onClick={handleRequestOtp}
+                  disabled={forgotLoading || !forgotEmail}
+                  className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium disabled:bg-blue-400"
+                >
+                  {forgotLoading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Send OTP'}
+                </button>
+              </div>
+            )}
+
+            {forgotStep === 'otp' && (
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600">Enter the 6-digit OTP code sent to your email.</p>
+                {displayOtp && (
+                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+                    <span className="text-xs text-yellow-600">Demo Mode - OTP Code:</span>
+                    <span className="block text-2xl font-mono font-bold text-yellow-800 tracking-widest mt-1">{displayOtp}</span>
+                  </div>
+                )}
+                <input
+                  type="text"
+                  maxLength={6}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-center text-2xl font-mono tracking-widest focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="000000"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                />
+                <button
+                  onClick={handleVerifyOtp}
+                  disabled={forgotLoading || otpCode.length !== 6}
+                  className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium disabled:bg-blue-400"
+                >
+                  {forgotLoading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Verify OTP'}
+                </button>
+              </div>
+            )}
+
+            {forgotStep === 'newpass' && (
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600">Enter your new password.</p>
+                <input
+                  type="password"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="New password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+                <button
+                  onClick={handleResetPassword}
+                  disabled={forgotLoading || newPassword.length < 6}
+                  className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium disabled:bg-green-400"
+                >
+                  {forgotLoading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Reset Password'}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
