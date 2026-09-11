@@ -149,6 +149,16 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
               {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign in'}
             </button>
           </div>
+
+          <div className="mt-6 text-center border-t border-gray-200 pt-4">
+            <p className="text-sm text-gray-600 mb-2">Are you a citizen reporting a health issue?</p>
+            <a 
+              href="/report-issue"
+              className="inline-flex justify-center py-2 px-4 border border-green-600 text-sm font-medium rounded-md text-green-700 bg-white hover:bg-green-50 w-full"
+            >
+              Submit a Public Complaint
+            </a>
+          </div>
         </form>
       </div>
 
@@ -718,6 +728,8 @@ function SettingsPage() {
   );
 }
 
+import PublicComplaintPortal from './PublicComplaintPortal';
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('token'));
 
@@ -727,23 +739,31 @@ function App() {
     setIsAuthenticated(false);
   };
 
-  if (!isAuthenticated) {
-    return <LoginScreen onLogin={handleLogin} />;
-  }
-
   return (
     <Router>
-      <DashboardLayout onLogout={handleLogout}>
-        <Routes>
-          <Route path="/" element={<DashboardHome />} />
-          <Route path="/overview" element={<DashboardHome />} />
-          <Route path="/officers" element={<OfficersList />} />
-          <Route path="/inspections" element={<InspectionsList />} />
-          <Route path="/complaints" element={<ComplaintsList />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </DashboardLayout>
+      <Routes>
+        <Route path="/report-issue" element={<PublicComplaintPortal />} />
+        
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <LoginScreen onLogin={handleLogin} />} />
+        
+        <Route path="/*" element={
+          isAuthenticated ? (
+            <DashboardLayout onLogout={handleLogout}>
+              <Routes>
+                <Route path="/" element={<DashboardHome />} />
+                <Route path="/overview" element={<DashboardHome />} />
+                <Route path="/officers" element={<OfficersList />} />
+                <Route path="/inspections" element={<InspectionsList />} />
+                <Route path="/complaints" element={<ComplaintsList />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </DashboardLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        } />
+      </Routes>
     </Router>
   );
 }
