@@ -12,6 +12,7 @@ class AppDatabase {
     final dir = await getApplicationDocumentsDirectory();
     final path = p.join(dir.path, 'phi_offline.db');
     _db = await openDatabase(path, version: 1, onCreate: _onCreate);
+    await _seedDengueIfEmpty(_db!);
     return _db!;
   }
 
@@ -179,6 +180,86 @@ class AppDatabase {
         value TEXT
       )
     ''');
+    await _createDengueTable(db);
+  }
+
+  Future<void> _createDengueTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS dengue_cases (
+        id TEXT PRIMARY KEY,
+        patient_name TEXT,
+        address TEXT,
+        reported_date TEXT,
+        latitude REAL,
+        longitude REAL,
+        risk_level TEXT,
+        status TEXT,
+        action_taken TEXT,
+        notes TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _seedDengueIfEmpty(Database db) async {
+    await _createDengueTable(db);
+    final countRes = await db.rawQuery('SELECT COUNT(*) as count FROM dengue_cases');
+    final count = Sqflite.firstIntValue(countRes) ?? 0;
+    if (count == 0) {
+      final now = DateTime.now().toIso8601String();
+      await db.insert('dengue_cases', {
+        'id': 'D-2401',
+        'patient_name': 'Kamal Gunaratne',
+        'address': 'No 45, Temple Road, Colombo 10',
+        'reported_date': DateTime.now().subtract(const Duration(days: 2)).toIso8601String().substring(0, 10),
+        'latitude': 6.9275,
+        'longitude': 79.8615,
+        'risk_level': 'high',
+        'status': 'active',
+        'action_taken': 'Warning notice issued',
+        'notes': 'High larval density in gutters. 100m radius inspection in progress.',
+        'updated_at': now,
+      });
+      await db.insert('dengue_cases', {
+        'id': 'D-2402',
+        'patient_name': 'S. K. Perera',
+        'address': '12/B, Galle Road, Kollupitiya',
+        'reported_date': DateTime.now().subtract(const Duration(days: 1)).toIso8601String().substring(0, 10),
+        'latitude': 6.9030,
+        'longitude': 79.8545,
+        'risk_level': 'critical',
+        'status': 'active',
+        'action_taken': 'Fogging scheduled',
+        'notes': 'Positive NS1 antigen. Commercial premises nearby require immediate check.',
+        'updated_at': now,
+      });
+      await db.insert('dengue_cases', {
+        'id': 'D-2403',
+        'patient_name': 'Nimali Silva',
+        'address': '88, Ward Place, Colombo 07',
+        'reported_date': DateTime.now().subtract(const Duration(days: 5)).toIso8601String().substring(0, 10),
+        'latitude': 6.9125,
+        'longitude': 79.8620,
+        'risk_level': 'medium',
+        'status': 'investigated',
+        'action_taken': 'Larvicide applied',
+        'notes': 'Premises inspected. Discarded containers safely disposed.',
+        'updated_at': now,
+      });
+      await db.insert('dengue_cases', {
+        'id': 'D-2404',
+        'patient_name': 'M. Farook',
+        'address': '15, Central Road, Colombo 13',
+        'reported_date': DateTime.now().subtract(const Duration(days: 10)).toIso8601String().substring(0, 10),
+        'latitude': 6.9380,
+        'longitude': 79.8520,
+        'risk_level': 'low',
+        'status': 'cleared',
+        'action_taken': 'Premise cleared & fogged',
+        'notes': 'Area clear. Second inspection completed without larvae.',
+        'updated_at': now,
+      });
+    }
   }
 
   Future<void> upsert(String table, Map<String, dynamic> row) async {

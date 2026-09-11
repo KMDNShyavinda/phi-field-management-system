@@ -13,6 +13,7 @@ import '../scan/scan_screen.dart';
 import '../map/map_screen.dart';
 import '../../core/google_drive_service.dart';
 import '../legal_guide/legal_guide_screen.dart';
+import '../dengue/dengue_tracking_screen.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 
@@ -86,6 +87,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             tooltip: 'Smart Legal Guide',
           ),
           IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const DengueTrackingScreen()));
+            },
+            icon: const Icon(Icons.pest_control),
+            tooltip: 'Dengue Hotspots & Tracking',
+          ),
+          IconButton(
             onPressed: _syncing ? null : _sync,
             icon: _syncing
                 ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
@@ -97,6 +105,14 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             },
             icon: const Icon(Icons.report_problem),
             tooltip: 'Complaints',
+          ),
+          IconButton(
+            onPressed: () async {
+              final driveService = GoogleDriveService();
+              await driveService.backupData(context);
+            },
+            icon: const Icon(Icons.cloud_upload),
+            tooltip: 'Backup to Google Drive',
           ),
           IconButton(onPressed: _logout, icon: const Icon(Icons.logout)),
         ],

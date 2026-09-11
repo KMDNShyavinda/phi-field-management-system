@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class ApiConfig {
   static String get baseUrl {
     const fromEnv = String.fromEnvironment('API_BASE_URL');

@@ -251,3 +251,61 @@ class Complaint {
     };
   }
 }
+
+class DengueCase {
+  const DengueCase({
+    required this.id,
+    required this.patientName,
+    required this.address,
+    required this.reportedDate,
+    required this.latitude,
+    required this.longitude,
+    required this.riskLevel,
+    required this.status,
+    this.actionTaken,
+    this.notes,
+  });
+
+  final String id;
+  final String patientName;
+  final String address;
+  final String reportedDate;
+  final double latitude;
+  final double longitude;
+  final String riskLevel; // 'low', 'medium', 'high', 'critical'
+  final String status;    // 'active', 'investigated', 'cleared'
+  final String? actionTaken;
+  final String? notes;
+
+  factory DengueCase.fromMap(Map<String, dynamic> map) {
+    return DengueCase(
+      id: map['id'] as String,
+      patientName: map['patient_name'] as String,
+      address: map['address'] as String,
+      reportedDate: map['reported_date'] as String,
+      latitude: (map['latitude'] as num).toDouble(),
+      longitude: (map['longitude'] as num).toDouble(),
+      riskLevel: map['risk_level'] as String? ?? 'high',
+      status: map['status'] as String? ?? 'active',
+      actionTaken: map['action_taken'] as String?,
+      notes: map['notes'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'patient_name': patientName,
+      'address': address,
+      'reported_date': reportedDate,
+      'latitude': latitude,
+      'longitude': longitude,
+      'risk_level': riskLevel,
+      'status': status,
+      'action_taken': actionTaken,
+      'notes': notes,
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+    };
+  }
+}
+

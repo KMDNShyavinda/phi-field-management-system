@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import '../../domain/models.dart';
 import '../../providers.dart';
+import '../dengue/dengue_tracking_screen.dart';
 
 class OfflineMapScreen extends ConsumerStatefulWidget {
   const OfflineMapScreen({super.key});
@@ -49,6 +50,13 @@ class _OfflineMapScreenState extends ConsumerState<OfflineMapScreen> {
       appBar: AppBar(
         title: const Text('Offline Maps - Locations'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.pest_control),
+            tooltip: 'Dengue Hotspots Map',
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const DengueTrackingScreen()));
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadPremises,
