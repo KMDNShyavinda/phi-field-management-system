@@ -35,6 +35,8 @@ from app.schemas import (
     ViolationOut,
 )
 from app.sync_apply import apply_op
+from app.risk_engine import calculate_premise_risk
+import uuid
 
 router = APIRouter(prefix="/sync", tags=["sync"])
 
@@ -122,12 +124,47 @@ def push(
 ) -> PushResponse:
     applied = 0
     errors: list[str] = []
+    
+    # Keep track of premises that might need a risk recalculation
+    affected_premises = set()
+
     for op in body.ops:
         try:
             apply_op(db, user, op.type, op.payload)
             db.commit()
             applied += 1
-        except Exception as exc:  # noqa: BLE001 — isolate a single bad op
+            
+            # Extract premise_id if relevant
+            if op.type == "upsert_inspection":
+                affected_premises.add(op.payload.get("premise_id"))
+            elif op.type == "upsert_complaint":
+                p_id = op.payload.get("premise_id")
+                if p_id: affected_premises.add(p_id)
+            elif op.type in ["upsert_answer", "upsert_violation"]:
+                # For answers and violations, we need to find the premise_id from the inspection
+                insp_id = op.payload.get("inspection_id")
+                if insp_id:
+                    try:
+                        insp = db.get(Inspection, uuid.UUID(insp_id))
+                        if insp and insp.premise_id:
+                            affected_premises.add(str(insp.premise_id))
+                    except:
+                        pass
+        except Exception as exc:  # noqa: BLE001 ?" isolate a single bad op
             db.rollback()
             errors.append(f"{op.type}: {exc}")
+            
+    # Recalculate risk for affected premises
+    if affected_premises:
+        for p_id in affected_premises:
+            if p_id:
+                try:
+                    calculate_premise_risk(db, uuid.UUID(p_id))
+                except:
+                    pass
+        try:
+            db.commit()
+        except:
+            db.rollback()
+
     return PushResponse(applied=applied, errors=errors)

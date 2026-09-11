@@ -146,7 +146,7 @@ def get_all_inspections(db: Session = Depends(get_db), current_user: User = Depe
             "premise_name": premise.name if premise else "Unknown",
             "officer_name": officer.full_name if officer else "Unknown",
             "started_at": i.started_at,
-            "ended_at": i.ended_at,
-            "compliance_score": i.compliance_score
+            "completed_at": i.completed_at,
+            "compliance_score": premise.compliance_score if premise else None
         })
     return result
