@@ -12,6 +12,26 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class OtpRequest(BaseModel):
+    email: str
+
+
+class OtpVerifyRequest(BaseModel):
+    email: str
+    otp_code: str
+
+
+class PasswordResetRequest(BaseModel):
+    email: str
+    otp_code: str
+    new_password: str
+
+
+class OtpResponse(BaseModel):
+    message: str
+    otp_code: str | None = None  # Only returned in dev/demo mode
+
+
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
