@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { API_BASE_URL } from './api';
+import { apiClient } from './api';
 
 export default function PublicComplaintPortal() {
   const [formData, setFormData] = useState({
@@ -18,7 +17,7 @@ export default function PublicComplaintPortal() {
   const [assignedTo, setAssignedTo] = useState<string>('');
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/public/areas`).then(res => {
+    apiClient.get('/public/areas').then(res => {
       setAreas(res.data);
       if (res.data.length > 0) {
         setFormData(f => ({ ...f, moh_area: res.data[0] }));
@@ -38,7 +37,7 @@ export default function PublicComplaintPortal() {
     e.preventDefault();
     setStatus('submitting');
     try {
-      const res = await axios.post(`${API_BASE_URL}/public/complaints`, formData);
+      const res = await apiClient.post('/public/complaints', formData);
       setAssignedTo(res.data.assigned_to || 'Pending Assignment');
       setStatus('success');
       setFormData({
