@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from './api';
 
@@ -7,14 +7,26 @@ export default function PublicComplaintPortal() {
     title: '',
     description: '',
     address: '',
+    moh_area: '',
     isEmergency: false,
     reporterName: '',
     reporterPhone: ''
   });
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [areas, setAreas] = useState<string[]>([]);
+  const [assignedTo, setAssignedTo] = useState<string>('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    axios.get(`${API_BASE_URL}/public/areas`).then(res => {
+      setAreas(res.data);
+      if (res.data.length > 0) {
+        setFormData(f => ({ ...f, moh_area: res.data[0] }));
+      }
+    }).catch(err => console.error("Failed to load areas", err));
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -26,12 +38,14 @@ export default function PublicComplaintPortal() {
     e.preventDefault();
     setStatus('submitting');
     try {
-      await axios.post(`${API_BASE_URL}/public/complaints`, formData);
+      const res = await axios.post(`${API_BASE_URL}/public/complaints`, formData);
+      setAssignedTo(res.data.assigned_to || 'Pending Assignment');
       setStatus('success');
       setFormData({
         title: '',
         description: '',
         address: '',
+        moh_area: areas[0] || '',
         isEmergency: false,
         reporterName: '',
         reporterPhone: ''
@@ -66,8 +80,12 @@ export default function PublicComplaintPortal() {
                   Your complaint has been submitted successfully!
                 </p>
                 <p className="text-xs text-green-600 mt-1">
-                  A tracking number has been sent to your phone (if provided). An inspector will review your report shortly.
+                  A tracking number has been generated. An inspector will review your report shortly.
                 </p>
+                <p className="text-sm text-green-800 mt-2 font-medium bg-green-100 inline-block px-2 py-1 rounded">
+                  Assigned Officer: {assignedTo}
+                </p>
+                <br/>
                 <button 
                   onClick={() => setStatus('idle')}
                   className="mt-4 text-green-800 underline text-sm font-semibold"
@@ -97,6 +115,23 @@ export default function PublicComplaintPortal() {
                 placeholder="e.g., Unsanitary food handling at local bakery"
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
               />
+            </div>
+
+            <div>
+              <label htmlFor="moh_area" className="block text-sm font-medium text-gray-700">MOH Area (Local Health Office) *</label>
+              <select
+                name="moh_area"
+                id="moh_area"
+                required
+                value={formData.moh_area}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm bg-white"
+              >
+                {areas.length === 0 && <option value="">Loading areas...</option>}
+                {areas.map(a => (
+                  <option key={a} value={a}>{a}</option>
+                ))}
+              </select>
             </div>
 
             <div>
