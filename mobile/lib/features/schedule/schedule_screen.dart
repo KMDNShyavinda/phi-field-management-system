@@ -12,6 +12,7 @@ import '../premise/premise_screen.dart';
 import '../scan/scan_screen.dart';
 import '../map/map_screen.dart';
 import '../../core/google_drive_service.dart';
+import '../legal_guide/legal_guide_screen.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 
@@ -76,6 +77,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             },
             icon: const Icon(Icons.map),
             tooltip: 'Offline Maps',
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const LegalGuideScreen()));
+            },
+            icon: const Icon(Icons.gavel),
+            tooltip: 'Smart Legal Guide',
           ),
           IconButton(
             onPressed: _syncing ? null : _sync,
