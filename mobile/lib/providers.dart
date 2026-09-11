@@ -6,12 +6,18 @@ import 'data/inspection/inspection_repository.dart';
 import 'data/sync/sync_service.dart';
 import 'domain/models.dart';
 
+import 'core/notification_service.dart';
+
 final dbProvider = Provider<AppDatabase>((ref) => AppDatabase());
 
 final apiProvider = Provider<ApiClient>((ref) => ApiClient());
 
 final syncServiceProvider = Provider<SyncService>((ref) {
-  return SyncService(ref.watch(dbProvider), ref.watch(apiProvider));
+  return SyncService(
+    ref.watch(dbProvider), 
+    ref.watch(apiProvider),
+    ref.watch(notificationServiceProvider),
+  );
 });
 
 final sessionProvider = FutureProvider<SessionUser?>((ref) {

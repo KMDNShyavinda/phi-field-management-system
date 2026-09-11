@@ -6,11 +6,25 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'app.dart';
 
-void main() {
+import 'package:phi_mobile/core/notification_service.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows || Platform.isLinux) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
   }
-  runApp(const ProviderScope(child: PhiApp()));
+  
+  // Init notifications
+  final notifService = NotificationService();
+  await notifService.init();
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        notificationServiceProvider.overrideWithValue(notifService),
+      ],
+      child: const PhiApp(),
+    ),
+  );
 }

@@ -3,14 +3,16 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 
+import '../../core/notification_service.dart';
 import '../api/api_client.dart';
 import '../db/app_database.dart';
 
 class SyncService {
-  SyncService(this._db, this._api);
+  SyncService(this._db, this._api, this._notif);
 
   final AppDatabase _db;
   final ApiClient _api;
+  final NotificationService _notif;
   bool _running = false;
 
   Future<bool> isOnline() async {
@@ -44,9 +46,30 @@ class SyncService {
     await _upsertList('evidence_photos', payload['evidence_photos']);
     await _upsertList('violations', payload['violations']);
     await _upsertList('signatures', payload['signatures']);
-    await _upsertList('complaints', payload['complaints']);
+    
+    final complaints = payload['complaints'] as List? ?? [];
+    await _upsertList('complaints', complaints);
+    
+    final visits = payload['scheduled_visits'] as List? ?? [];
+
     final serverTime = payload['server_time'] as String? ?? DateTime.now().toUtc().toIso8601String();
     await _db.setMeta('last_pulled_at', serverTime);
+
+    if (complaints.isNotEmpty) {
+      await _notif.showNotification(
+        id: 1,
+        title: 'New Complaints Received',
+        body: 'You have ${complaints.length} new complaint(s) assigned to your area.',
+      );
+    }
+    
+    if (visits.isNotEmpty) {
+      await _notif.showNotification(
+        id: 2,
+        title: 'Schedule Updated',
+        body: 'You have ${visits.length} new or updated visit(s) in your schedule.',
+      );
+    }
   }
 
   Future<void> _upsertList(String table, dynamic rows) async {
