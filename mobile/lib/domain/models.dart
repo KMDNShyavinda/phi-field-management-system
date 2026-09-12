@@ -385,4 +385,78 @@ class FoodHandler {
   }
 }
 
+class SampleRecord {
+  const SampleRecord({
+    required this.id,
+    this.premiseId,
+    required this.sampleType,
+    required this.itemName,
+    required this.sampleNo,
+    required this.sampledDate,
+    this.batchNo,
+    required this.testType,
+    required this.laboratory,
+    required this.labResultStatus,
+    this.resultDate,
+    this.resultDetails,
+    this.legalActionTaken,
+    this.notes,
+  });
+
+  final String id;
+  final String? premiseId;
+  final String sampleType; // 'food' or 'water'
+  final String itemName;
+  final String sampleNo;
+  final String sampledDate;
+  final String? batchNo;
+  final String testType;
+  final String laboratory;
+  final String labResultStatus; // 'pending', 'satisfactory', 'unsatisfactory'
+  final String? resultDate;
+  final String? resultDetails;
+  final String? legalActionTaken;
+  final String? notes;
+
+  factory SampleRecord.fromMap(Map<String, dynamic> map) {
+    return SampleRecord(
+      id: map['id'] as String,
+      premiseId: map['premise_id'] as String?,
+      sampleType: map['sample_type'] as String? ?? 'food',
+      itemName: map['item_name'] as String,
+      sampleNo: map['sample_no'] as String? ?? '',
+      sampledDate: map['sampled_date'] as String? ?? '',
+      batchNo: map['batch_no'] as String?,
+      testType: map['test_type'] as String? ?? '',
+      laboratory: map['laboratory'] as String? ?? '',
+      labResultStatus: map['lab_result_status'] as String? ?? 'pending',
+      resultDate: map['result_date'] as String?,
+      resultDetails: map['result_details'] as String?,
+      legalActionTaken: map['legal_action_taken'] as String?,
+      notes: map['notes'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'premise_id': premiseId,
+      'sample_type': sampleType,
+      'item_name': itemName,
+      'sample_no': sampleNo,
+      'sampled_date': sampledDate,
+      'batch_no': batchNo,
+      'test_type': testType,
+      'laboratory': laboratory,
+      'lab_result_status': labResultStatus,
+      'result_date': resultDate,
+      'result_details': resultDetails,
+      'legal_action_taken': legalActionTaken,
+      'notes': notes,
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+    };
+  }
+}
+
+
 

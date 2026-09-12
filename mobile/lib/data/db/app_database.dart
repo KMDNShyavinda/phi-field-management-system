@@ -15,6 +15,7 @@ class AppDatabase {
     _db = await openDatabase(path, version: 1, onCreate: _onCreate);
     await _seedDengueIfEmpty(_db!);
     await _seedFoodHandlersIfEmpty(_db!);
+    await _seedSamplesIfEmpty(_db!);
     return _db!;
   }
 
@@ -184,6 +185,7 @@ class AppDatabase {
     ''');
     await _createDengueTable(db);
     await _createFoodHandlersTable(db);
+    await _createSamplesTable(db);
   }
 
   Future<void> _createDengueTable(Database db) async {
@@ -364,6 +366,116 @@ class AppDatabase {
         'expiry_date': ymd.format(now.add(const Duration(days: 20))),
         'status': 'expiring_soon',
         'notes': 'Renewal reminder SMS sent to manager.',
+        'updated_at': nowIso,
+      });
+    }
+  }
+
+  Future<void> _createSamplesTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS samples (
+        id TEXT PRIMARY KEY,
+        premise_id TEXT,
+        sample_type TEXT,
+        item_name TEXT,
+        sample_no TEXT,
+        sampled_date TEXT,
+        batch_no TEXT,
+        test_type TEXT,
+        laboratory TEXT,
+        lab_result_status TEXT,
+        result_date TEXT,
+        result_details TEXT,
+        legal_action_taken TEXT,
+        notes TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _seedSamplesIfEmpty(Database db) async {
+    await _createSamplesTable(db);
+    final countRes = await db.rawQuery('SELECT COUNT(*) as count FROM samples');
+    final count = Sqflite.firstIntValue(countRes) ?? 0;
+    if (count == 0) {
+      final now = DateTime.now();
+      final nowIso = now.toIso8601String();
+      final ymd = DateFormat('yyyy-MM-dd');
+
+      final premises = await db.query('premises');
+      final cBakeryId = premises.isNotEmpty ? premises.first['id'] as String : '00000000000040008000000000000103';
+      final lHotelId = premises.length > 1 ? premises[1]['id'] as String : '00000000000040008000000000000101';
+      final gRestId = premises.length > 2 ? premises[2]['id'] as String : '00000000000040008000000000000102';
+
+      await db.insert('samples', {
+        'id': 'SMP-001',
+        'premise_id': cBakeryId,
+        'sample_type': 'food',
+        'item_name': 'Pure White Coconut Oil',
+        'sample_no': 'COL/FA/2026/089',
+        'sampled_date': ymd.format(now.subtract(const Duration(days: 14))),
+        'batch_no': 'B-8902',
+        'test_type': 'Chemical (Aflatoxin & Fatty Acids)',
+        'laboratory': 'Government Analyst Department',
+        'lab_result_status': 'pending',
+        'result_date': null,
+        'result_details': 'Dispatched under official Government Analyst seal. Awaiting formal report.',
+        'legal_action_taken': null,
+        'notes': 'Suspected adulteration with palm oil. Sample divided into 4 parts as per Sec 13.',
+        'updated_at': nowIso,
+      });
+
+      await db.insert('samples', {
+        'id': 'SMP-002',
+        'premise_id': lHotelId,
+        'sample_type': 'food',
+        'item_name': 'Chili Powder (Retail Pack)',
+        'sample_no': 'COL/FA/2026/090',
+        'sampled_date': ymd.format(now.subtract(const Duration(days: 28))),
+        'batch_no': 'LOT-441',
+        'test_type': 'Adulteration / Synthetic Dyes (Sudan dye)',
+        'laboratory': 'Government Analyst Department',
+        'lab_result_status': 'satisfactory',
+        'result_date': ymd.format(now.subtract(const Duration(days: 4))),
+        'result_details': 'Passed all statutory limits. No synthetic dyes detected. Compliant with Food Act standards.',
+        'legal_action_taken': 'Sample cleared. Vendor informed.',
+        'notes': 'Report Reference: GA/FD/2026/1844.',
+        'updated_at': nowIso,
+      });
+
+      await db.insert('samples', {
+        'id': 'SMP-003',
+        'premise_id': gRestId,
+        'sample_type': 'water',
+        'item_name': 'Drinking Water (Filtered Storage Tank)',
+        'sample_no': 'COL/WT/2026/012',
+        'sampled_date': ymd.format(now.subtract(const Duration(days: 7))),
+        'batch_no': 'TANK-01',
+        'test_type': 'Bacteriological (Coliforms & E. coli)',
+        'laboratory': 'Medical Research Institute (MRI)',
+        'lab_result_status': 'unsatisfactory',
+        'result_date': ymd.format(now.subtract(const Duration(days: 1))),
+        'result_details': 'Coliform count 34 CFU/100ml. E. coli detected. Unfit for drinking without boil/chlorination.',
+        'legal_action_taken': 'Emergency closure of drinking water tank. Immediate chlorination ordered.',
+        'notes': 'Follow-up water sample to be drawn after 48 hours of cleaning.',
+        'updated_at': nowIso,
+      });
+
+      await db.insert('samples', {
+        'id': 'SMP-004',
+        'premise_id': cBakeryId,
+        'sample_type': 'water',
+        'item_name': 'Piped Municipal Tap Water',
+        'sample_no': 'COL/WT/2026/014',
+        'sampled_date': ymd.format(now.subtract(const Duration(days: 2))),
+        'batch_no': 'TAP-KITCHEN',
+        'test_type': 'Free Residual Chlorine Test',
+        'laboratory': 'MOH Field Rapid Test Kit',
+        'lab_result_status': 'satisfactory',
+        'result_date': ymd.format(now.subtract(const Duration(days: 2))),
+        'result_details': 'Free residual chlorine 0.25 ppm (Standard range: 0.2 - 0.5 ppm). Safe for food preparation.',
+        'legal_action_taken': 'None required. Compliant.',
+        'notes': 'Tested on site using DPD colorimetric comparator.',
         'updated_at': nowIso,
       });
     }

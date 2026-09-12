@@ -6,6 +6,7 @@ import '../../domain/models.dart';
 import '../../providers.dart';
 import '../inspection/checklist_screen.dart';
 import '../food_handlers/food_handlers_screen.dart';
+import '../samples/samples_screen.dart';
 
 class PremiseScreen extends ConsumerWidget {
   const PremiseScreen({super.key, required this.premiseId, this.visitId});
@@ -65,6 +66,19 @@ class PremiseScreen extends ConsumerWidget {
                 },
                 icon: const Icon(Icons.badge_outlined),
                 label: const Text('Food Handlers\' Medical Certificates'),
+              ),
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => SamplesScreen(filterPremiseId: premise.id),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.science_outlined),
+                label: const Text('Food & Water Samples (සාම්පල වාර්තා)'),
               ),
               const SizedBox(height: 16),
               Text('Previous inspections', style: Theme.of(context).textTheme.titleMedium),
