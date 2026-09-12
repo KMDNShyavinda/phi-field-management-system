@@ -167,7 +167,7 @@ class InspectionRepository {
     final out = <Map<String, dynamic>>[];
     for (final answer in answers) {
       if (answer['result'] != 'fail') continue;
-      final item = items[answer['item_id']] as Map<String, dynamic>?;
+      final item = items[answer['item_id']];
       if (item == null) continue;
       final suggestion = suggestNotice(item['code'] as String);
       final deadline = DateTime.now().toUtc().add(Duration(days: suggestion.days));

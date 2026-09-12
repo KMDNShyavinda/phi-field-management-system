@@ -125,7 +125,7 @@ class _AddPremiseScreenState extends ConsumerState<AddPremiseScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _riskLevel,
+                initialValue: _riskLevel,
                 decoration: const InputDecoration(
                   labelText: 'Risk Level',
                   border: OutlineInputBorder(),

@@ -170,7 +170,7 @@ class _AddSampleScreenState extends ConsumerState<AddSampleScreen> {
                   const SizedBox(height: 12),
 
                   DropdownButtonFormField<String?>(
-                    value: _selectedPremiseId,
+                    initialValue: _selectedPremiseId,
                     decoration: const InputDecoration(
                       labelText: 'ආශ්‍රිත ව්‍යාපාරය / ස්ථානය (Establishment / Source)',
                       prefixIcon: Icon(Icons.storefront),
@@ -259,7 +259,7 @@ class _AddSampleScreenState extends ConsumerState<AddSampleScreen> {
                   const SizedBox(height: 12),
 
                   DropdownButtonFormField<String>(
-                    value: _selectedTestType,
+                    initialValue: _selectedTestType,
                     decoration: const InputDecoration(
                       labelText: 'අවශ්‍ය පරීක්ෂණ වර්ගය (Test Requested)',
                       prefixIcon: Icon(Icons.biotech),
@@ -271,7 +271,7 @@ class _AddSampleScreenState extends ConsumerState<AddSampleScreen> {
                   const SizedBox(height: 12),
 
                   DropdownButtonFormField<String>(
-                    value: _selectedLab,
+                    initialValue: _selectedLab,
                     decoration: const InputDecoration(
                       labelText: 'යවන රසායනාගාරය (Testing Laboratory)',
                       prefixIcon: Icon(Icons.local_hospital),

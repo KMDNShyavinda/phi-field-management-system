@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/theme.dart';
 import '../../domain/models.dart';
 import '../../providers.dart';
 import 'complaint_details_screen.dart';

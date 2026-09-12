@@ -16,6 +16,7 @@ class AppDatabase {
     await _seedDengueIfEmpty(_db!);
     await _seedFoodHandlersIfEmpty(_db!);
     await _seedSamplesIfEmpty(_db!);
+    await _seedSchoolClinicIfEmpty(_db!);
     return _db!;
   }
 
@@ -186,6 +187,7 @@ class AppDatabase {
     await _createDengueTable(db);
     await _createFoodHandlersTable(db);
     await _createSamplesTable(db);
+    await _createSchoolClinicTable(db);
   }
 
   Future<void> _createDengueTable(Database db) async {
@@ -476,6 +478,116 @@ class AppDatabase {
         'result_details': 'Free residual chlorine 0.25 ppm (Standard range: 0.2 - 0.5 ppm). Safe for food preparation.',
         'legal_action_taken': 'None required. Compliant.',
         'notes': 'Tested on site using DPD colorimetric comparator.',
+        'updated_at': nowIso,
+      });
+    }
+  }
+
+  Future<void> _createSchoolClinicTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS school_clinic_inspections (
+        id TEXT PRIMARY KEY,
+        category TEXT,
+        facility_name TEXT,
+        facility_address TEXT,
+        contact_person TEXT,
+        inspection_date TEXT,
+        overall_grade TEXT,
+        status TEXT,
+        healthy_food_compliance INTEGER,
+        handwashing_sanitation INTEGER,
+        food_handler_cleanliness INTEGER,
+        cold_chain_maintained INTEGER,
+        biomedical_waste_disposal INTEGER,
+        findings_deficiencies TEXT,
+        recommendations TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _seedSchoolClinicIfEmpty(Database db) async {
+    await _createSchoolClinicTable(db);
+    final countRes = await db.rawQuery('SELECT COUNT(*) as count FROM school_clinic_inspections');
+    final count = Sqflite.firstIntValue(countRes) ?? 0;
+    if (count == 0) {
+      final now = DateTime.now();
+      final nowIso = now.toIso8601String();
+      final ymd = DateFormat('yyyy-MM-dd');
+
+      await db.insert('school_clinic_inspections', {
+        'id': 'SCI-001',
+        'category': 'school_canteen',
+        'facility_name': 'Royal College - Main Canteen',
+        'facility_address': 'Rajakeeya Mawatha, Colombo 07',
+        'contact_person': 'Senior Vice Principal / Canteen Committee Head',
+        'inspection_date': ymd.format(now.subtract(const Duration(days: 4))),
+        'overall_grade': 'A - Excellent',
+        'status': 'passed',
+        'healthy_food_compliance': 1,
+        'handwashing_sanitation': 1,
+        'food_handler_cleanliness': 1,
+        'cold_chain_maintained': 0,
+        'biomedical_waste_disposal': 0,
+        'findings_deficiencies': 'Full compliance with Joint Circular on Healthy School Canteens. No carbonated or colored drinks found. Fresh fruits and traditional foods provided.',
+        'recommendations': 'Maintain high standards. Recommended for National Healthy Canteen Certification.',
+        'updated_at': nowIso,
+      });
+
+      await db.insert('school_clinic_inspections', {
+        'id': 'SCI-002',
+        'category': 'school_canteen',
+        'facility_name': 'Kollupitiya Vidyalaya Primary Canteen',
+        'facility_address': 'St. Michael\'s Road, Kollupitiya',
+        'contact_person': 'School Principal / Canteen Tender Operator',
+        'inspection_date': ymd.format(now.subtract(const Duration(days: 8))),
+        'overall_grade': 'C - Needs Improvement',
+        'status': 'warning_issued',
+        'healthy_food_compliance': 0,
+        'handwashing_sanitation': 1,
+        'food_handler_cleanliness': 0,
+        'cold_chain_maintained': 0,
+        'biomedical_waste_disposal': 0,
+        'findings_deficiencies': 'Commercially packaged artificial snacks with flavor enhancers displayed. One food handler lacked proper hairnet/apron.',
+        'recommendations': 'Issued 14-day notice to remove all non-compliant snacks. Immediate medical fitness testing required for new helper.',
+        'updated_at': nowIso,
+      });
+
+      await db.insert('school_clinic_inspections', {
+        'id': 'SCI-003',
+        'category': 'mch_clinic',
+        'facility_name': 'Bambalapitiya MCH & Immunization Center',
+        'facility_address': 'Station Road, Bambalapitiya',
+        'contact_person': 'Supervising Public Health Nursing Sister (SPHN)',
+        'inspection_date': ymd.format(now.subtract(const Duration(days: 3))),
+        'overall_grade': 'A - Excellent',
+        'status': 'passed',
+        'healthy_food_compliance': 0,
+        'handwashing_sanitation': 1,
+        'food_handler_cleanliness': 0,
+        'cold_chain_maintained': 1,
+        'biomedical_waste_disposal': 1,
+        'findings_deficiencies': 'Vaccine refrigerator temperature logged twice daily at 4.2°C. Cold chain intact. Sharp safety boxes properly labeled.',
+        'recommendations': 'Routine maintenance satisfactory. Sufficient emergency obstetric & pediatric kit in place.',
+        'updated_at': nowIso,
+      });
+
+      await db.insert('school_clinic_inspections', {
+        'id': 'SCI-004',
+        'category': 'mch_clinic',
+        'facility_name': 'Colombo West Infant Welfare & Maternity Clinic',
+        'facility_address': 'Galle Road, Colombo 03',
+        'contact_person': 'Public Health Midwife (PHM)',
+        'inspection_date': ymd.format(now.subtract(const Duration(days: 12))),
+        'overall_grade': 'B - Satisfactory',
+        'status': 'follow_up_required',
+        'healthy_food_compliance': 0,
+        'handwashing_sanitation': 1,
+        'food_handler_cleanliness': 0,
+        'cold_chain_maintained': 1,
+        'biomedical_waste_disposal': 0,
+        'findings_deficiencies': 'Yellow biohazard bag supply running low. Clinic waiting area well-ventilated and dengue larvae free.',
+        'recommendations': 'Requisition extra biohazard bags from Central MOH stores immediately.',
         'updated_at': nowIso,
       });
     }

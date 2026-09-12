@@ -141,7 +141,7 @@ class _AddFoodHandlerScreenState extends ConsumerState<AddFoodHandlerScreen> {
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
-                    value: _selectedPremiseId,
+                    initialValue: _selectedPremiseId,
                     decoration: const InputDecoration(
                       labelText: 'ආහාර ව්‍යාපාරික ස්ථානය (Establishment) *',
                       prefixIcon: Icon(Icons.storefront),
@@ -182,7 +182,7 @@ class _AddFoodHandlerScreenState extends ConsumerState<AddFoodHandlerScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: DropdownButtonFormField<String>(
-                          value: _selectedRole,
+                          initialValue: _selectedRole,
                           decoration: const InputDecoration(
                             labelText: 'තනතුර (Role)',
                             border: OutlineInputBorder(),

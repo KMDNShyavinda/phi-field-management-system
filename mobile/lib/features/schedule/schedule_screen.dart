@@ -17,6 +17,7 @@ import '../dengue/dengue_tracking_screen.dart';
 import '../reports/monthly_report_screen.dart';
 import '../food_handlers/food_handlers_screen.dart';
 import '../samples/samples_screen.dart';
+import '../schools_clinics/schools_clinics_screen.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 
@@ -118,6 +119,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             tooltip: 'Water & Food Samples',
           ),
           IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const SchoolsClinicsScreen()));
+            },
+            icon: const Icon(Icons.school_outlined),
+            tooltip: 'Schools & Clinics (පාසල් සහ සායන)',
+          ),
+          IconButton(
             onPressed: _syncing ? null : _sync,
             icon: _syncing
                 ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
@@ -160,7 +168,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             events.putIfAbsent(dateStr, () => []).add(v);
           }
           
-          List<Map<String, dynamic>> _getEventsForDay(DateTime day) {
+          List<Map<String, dynamic>> getEventsForDay(DateTime day) {
             final dateStr = DateFormat('yyyy-MM-dd').format(day);
             return events[dateStr] ?? [];
           }
@@ -197,7 +205,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                               CalendarFormat.twoWeeks: '2 Weeks',
                               CalendarFormat.week: 'Week',
                             },
-                            eventLoader: _getEventsForDay,
+                            eventLoader: getEventsForDay,
                             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                             onDaySelected: (selectedDay, focusedDay) {
                               setState(() {
@@ -211,7 +219,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                 shape: BoxShape.circle,
                               ),
                               todayDecoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                                 shape: BoxShape.circle,
                               ),
                               selectedDecoration: BoxDecoration(

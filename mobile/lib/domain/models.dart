@@ -458,5 +458,83 @@ class SampleRecord {
   }
 }
 
+class SchoolClinicInspection {
+  const SchoolClinicInspection({
+    required this.id,
+    required this.category,
+    required this.facilityName,
+    required this.facilityAddress,
+    required this.contactPerson,
+    required this.inspectionDate,
+    required this.overallGrade,
+    required this.status,
+    required this.healthyFoodCompliance,
+    required this.handwashingSanitation,
+    required this.foodHandlerCleanliness,
+    required this.coldChainMaintained,
+    required this.biomedicalWasteDisposal,
+    this.findingsDeficiencies,
+    this.recommendations,
+  });
+
+  final String id;
+  final String category; // 'school_canteen' or 'mch_clinic'
+  final String facilityName;
+  final String facilityAddress;
+  final String contactPerson;
+  final String inspectionDate;
+  final String overallGrade; // 'A - Excellent', 'B - Satisfactory', 'C - Needs Improvement', 'D - Unacceptable / Closure'
+  final String status; // 'passed', 'warning_issued', 'follow_up_required'
+  final bool healthyFoodCompliance;
+  final bool handwashingSanitation;
+  final bool foodHandlerCleanliness;
+  final bool coldChainMaintained;
+  final bool biomedicalWasteDisposal;
+  final String? findingsDeficiencies;
+  final String? recommendations;
+
+  factory SchoolClinicInspection.fromMap(Map<String, dynamic> map) {
+    return SchoolClinicInspection(
+      id: map['id'] as String,
+      category: map['category'] as String? ?? 'school_canteen',
+      facilityName: map['facility_name'] as String,
+      facilityAddress: map['facility_address'] as String? ?? '',
+      contactPerson: map['contact_person'] as String? ?? '',
+      inspectionDate: map['inspection_date'] as String? ?? '',
+      overallGrade: map['overall_grade'] as String? ?? 'B - Satisfactory',
+      status: map['status'] as String? ?? 'passed',
+      healthyFoodCompliance: (map['healthy_food_compliance'] as int? ?? 0) == 1,
+      handwashingSanitation: (map['handwashing_sanitation'] as int? ?? 0) == 1,
+      foodHandlerCleanliness: (map['food_handler_cleanliness'] as int? ?? 0) == 1,
+      coldChainMaintained: (map['cold_chain_maintained'] as int? ?? 0) == 1,
+      biomedicalWasteDisposal: (map['biomedical_waste_disposal'] as int? ?? 0) == 1,
+      findingsDeficiencies: map['findings_deficiencies'] as String?,
+      recommendations: map['recommendations'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'category': category,
+      'facility_name': facilityName,
+      'facility_address': facilityAddress,
+      'contact_person': contactPerson,
+      'inspection_date': inspectionDate,
+      'overall_grade': overallGrade,
+      'status': status,
+      'healthy_food_compliance': healthyFoodCompliance ? 1 : 0,
+      'handwashing_sanitation': handwashingSanitation ? 1 : 0,
+      'food_handler_cleanliness': foodHandlerCleanliness ? 1 : 0,
+      'cold_chain_maintained': coldChainMaintained ? 1 : 0,
+      'biomedical_waste_disposal': biomedicalWasteDisposal ? 1 : 0,
+      'findings_deficiencies': findingsDeficiencies,
+      'recommendations': recommendations,
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+    };
+  }
+}
+
+
 
 

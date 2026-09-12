@@ -232,7 +232,7 @@ class _AddDengueCaseScreenState extends ConsumerState<AddDengueCaseScreen> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _riskLevel,
+                    initialValue: _riskLevel,
                     decoration: const InputDecoration(labelText: 'අවදානම (Risk)', border: OutlineInputBorder()),
                     items: const [
                       DropdownMenuItem(value: 'critical', child: Text('Critical (🔴)')),
@@ -246,7 +246,7 @@ class _AddDengueCaseScreenState extends ConsumerState<AddDengueCaseScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _status,
+                    initialValue: _status,
                     decoration: const InputDecoration(labelText: 'තත්ත්වය (Status)', border: OutlineInputBorder()),
                     items: const [
                       DropdownMenuItem(value: 'active', child: Text('Active (ක්‍රියාකාරී)')),

@@ -77,7 +77,7 @@ class _SamplesScreenState extends ConsumerState<SamplesScreen> with SingleTicker
                 const Text('ප්‍රතිඵලය (Lab Result Status):', style: TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
-                  value: newStatus,
+                  initialValue: newStatus,
                   decoration: const InputDecoration(border: OutlineInputBorder(), isDense: true),
                   items: const [
                     DropdownMenuItem(value: 'satisfactory', child: Text('සතුටුදායකයි - Passed (🟢)')),
