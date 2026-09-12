@@ -14,6 +14,7 @@ import '../map/map_screen.dart';
 import '../../core/google_drive_service.dart';
 import '../legal_guide/legal_guide_screen.dart';
 import '../dengue/dengue_tracking_screen.dart';
+import '../reports/monthly_report_screen.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 
@@ -92,6 +93,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             },
             icon: const Icon(Icons.pest_control),
             tooltip: 'Dengue Hotspots & Tracking',
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const MonthlyReportScreen()));
+            },
+            icon: const Icon(Icons.picture_as_pdf),
+            tooltip: 'MOH Monthly Reports (PDF)',
           ),
           IconButton(
             onPressed: _syncing ? null : _sync,
