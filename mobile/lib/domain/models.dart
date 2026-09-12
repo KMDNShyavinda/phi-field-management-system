@@ -309,3 +309,80 @@ class DengueCase {
   }
 }
 
+class FoodHandler {
+  const FoodHandler({
+    required this.id,
+    required this.premiseId,
+    required this.fullName,
+    required this.nic,
+    required this.role,
+    required this.certificateNo,
+    required this.issuedDate,
+    required this.expiryDate,
+    required this.status,
+    this.notes,
+  });
+
+  final String id;
+  final String premiseId;
+  final String fullName;
+  final String nic;
+  final String role;
+  final String certificateNo;
+  final String issuedDate;
+  final String expiryDate;
+  final String status;
+  final String? notes;
+
+  factory FoodHandler.fromMap(Map<String, dynamic> map) {
+    return FoodHandler(
+      id: map['id'] as String,
+      premiseId: map['premise_id'] as String,
+      fullName: map['full_name'] as String,
+      nic: map['nic'] as String? ?? '',
+      role: map['role'] as String? ?? 'Food Handler',
+      certificateNo: map['certificate_no'] as String? ?? '',
+      issuedDate: map['issued_date'] as String? ?? '',
+      expiryDate: map['expiry_date'] as String? ?? '',
+      status: map['status'] as String? ?? 'valid',
+      notes: map['notes'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'premise_id': premiseId,
+      'full_name': fullName,
+      'nic': nic,
+      'role': role,
+      'certificate_no': certificateNo,
+      'issued_date': issuedDate,
+      'expiry_date': expiryDate,
+      'status': status,
+      'notes': notes,
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+    };
+  }
+
+  int get daysUntilExpiry {
+    try {
+      final exp = DateTime.parse(expiryDate);
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final expDay = DateTime(exp.year, exp.month, exp.day);
+      return expDay.difference(today).inDays;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  String get calculatedStatus {
+    final days = daysUntilExpiry;
+    if (days < 0) return 'expired';
+    if (days <= 30) return 'expiring_soon';
+    return 'valid';
+  }
+}
+
+

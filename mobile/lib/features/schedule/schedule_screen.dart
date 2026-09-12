@@ -15,6 +15,7 @@ import '../../core/google_drive_service.dart';
 import '../legal_guide/legal_guide_screen.dart';
 import '../dengue/dengue_tracking_screen.dart';
 import '../reports/monthly_report_screen.dart';
+import '../food_handlers/food_handlers_screen.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 
@@ -100,6 +101,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             },
             icon: const Icon(Icons.picture_as_pdf),
             tooltip: 'MOH Monthly Reports (PDF)',
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const FoodHandlersScreen()));
+            },
+            icon: const Icon(Icons.badge_outlined),
+            tooltip: 'Food Handlers Medical Certificates',
           ),
           IconButton(
             onPressed: _syncing ? null : _sync,

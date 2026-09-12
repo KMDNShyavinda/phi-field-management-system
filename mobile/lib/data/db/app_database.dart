@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -13,6 +14,7 @@ class AppDatabase {
     final path = p.join(dir.path, 'phi_offline.db');
     _db = await openDatabase(path, version: 1, onCreate: _onCreate);
     await _seedDengueIfEmpty(_db!);
+    await _seedFoodHandlersIfEmpty(_db!);
     return _db!;
   }
 
@@ -181,6 +183,7 @@ class AppDatabase {
       )
     ''');
     await _createDengueTable(db);
+    await _createFoodHandlersTable(db);
   }
 
   Future<void> _createDengueTable(Database db) async {
@@ -258,6 +261,110 @@ class AppDatabase {
         'action_taken': 'Premise cleared & fogged',
         'notes': 'Area clear. Second inspection completed without larvae.',
         'updated_at': now,
+      });
+    }
+  }
+
+  Future<void> _createFoodHandlersTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS food_handlers (
+        id TEXT PRIMARY KEY,
+        premise_id TEXT,
+        full_name TEXT,
+        nic TEXT,
+        role TEXT,
+        certificate_no TEXT,
+        issued_date TEXT,
+        expiry_date TEXT,
+        status TEXT,
+        notes TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _seedFoodHandlersIfEmpty(Database db) async {
+    await _createFoodHandlersTable(db);
+    final countRes = await db.rawQuery('SELECT COUNT(*) as count FROM food_handlers');
+    final count = Sqflite.firstIntValue(countRes) ?? 0;
+    if (count == 0) {
+      final now = DateTime.now();
+      final nowIso = now.toIso8601String();
+      final ymd = DateFormat('yyyy-MM-dd');
+
+      final premises = await db.query('premises');
+      final cBakeryId = premises.isNotEmpty ? premises.first['id'] as String : '00000000000040008000000000000103';
+      final lHotelId = premises.length > 1 ? premises[1]['id'] as String : '00000000000040008000000000000101';
+      final gRestId = premises.length > 2 ? premises[2]['id'] as String : '00000000000040008000000000000102';
+
+      await db.insert('food_handlers', {
+        'id': 'FH-101',
+        'premise_id': cBakeryId,
+        'full_name': 'Sunil Shantha',
+        'nic': '198412304567',
+        'role': 'Head Baker',
+        'certificate_no': 'MOH/COL/2025/112',
+        'issued_date': ymd.format(now.subtract(const Duration(days: 355))),
+        'expiry_date': ymd.format(now.add(const Duration(days: 10))),
+        'status': 'expiring_soon',
+        'notes': 'Stool & blood medical clear. Annual renewal due in 10 days.',
+        'updated_at': nowIso,
+      });
+
+      await db.insert('food_handlers', {
+        'id': 'FH-102',
+        'premise_id': cBakeryId,
+        'full_name': 'Ruwan Kumara',
+        'nic': '199245601234',
+        'role': 'Assistant Baker',
+        'certificate_no': 'MOH/COL/2025/113',
+        'issued_date': ymd.format(now.subtract(const Duration(days: 395))),
+        'expiry_date': ymd.format(now.subtract(const Duration(days: 30))),
+        'status': 'expired',
+        'notes': 'Certificate EXPIRED. Warning notice served to renew immediately.',
+        'updated_at': nowIso,
+      });
+
+      await db.insert('food_handlers', {
+        'id': 'FH-103',
+        'premise_id': lHotelId,
+        'full_name': 'Anura Bandara',
+        'nic': '197908901234',
+        'role': 'Executive Chef',
+        'certificate_no': 'MOH/COL/2026/045',
+        'issued_date': ymd.format(now.subtract(const Duration(days: 60))),
+        'expiry_date': ymd.format(now.add(const Duration(days: 305))),
+        'status': 'valid',
+        'notes': 'Five-star medical clearance valid.',
+        'updated_at': nowIso,
+      });
+
+      await db.insert('food_handlers', {
+        'id': 'FH-104',
+        'premise_id': lHotelId,
+        'full_name': 'Priyanka Jayakody',
+        'nic': '198856708912',
+        'role': 'Kitchen Steward',
+        'certificate_no': 'MOH/COL/2025/998',
+        'issued_date': ymd.format(now.subtract(const Duration(days: 380))),
+        'expiry_date': ymd.format(now.subtract(const Duration(days: 15))),
+        'status': 'expired',
+        'notes': 'Must not handle direct food preparation until renewed.',
+        'updated_at': nowIso,
+      });
+
+      await db.insert('food_handlers', {
+        'id': 'FH-105',
+        'premise_id': gRestId,
+        'full_name': 'Mohamed Rizan',
+        'nic': '199512345678',
+        'role': 'Food Server & Steward',
+        'certificate_no': 'MOH/COL/2025/441',
+        'issued_date': ymd.format(now.subtract(const Duration(days: 345))),
+        'expiry_date': ymd.format(now.add(const Duration(days: 20))),
+        'status': 'expiring_soon',
+        'notes': 'Renewal reminder SMS sent to manager.',
+        'updated_at': nowIso,
       });
     }
   }

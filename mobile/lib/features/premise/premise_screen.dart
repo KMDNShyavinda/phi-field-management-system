@@ -5,6 +5,7 @@ import '../../core/theme.dart';
 import '../../domain/models.dart';
 import '../../providers.dart';
 import '../inspection/checklist_screen.dart';
+import '../food_handlers/food_handlers_screen.dart';
 
 class PremiseScreen extends ConsumerWidget {
   const PremiseScreen({super.key, required this.premiseId, this.visitId});
@@ -51,6 +52,19 @@ class PremiseScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => FoodHandlersScreen(filterPremiseId: premise.id),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.badge_outlined),
+                label: const Text('Food Handlers\' Medical Certificates'),
               ),
               const SizedBox(height: 16),
               Text('Previous inspections', style: Theme.of(context).textTheme.titleMedium),
