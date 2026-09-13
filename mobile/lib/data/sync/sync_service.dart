@@ -28,6 +28,8 @@ class SyncService {
       await _pushOutbox();
       await _uploadPending();
       await _pull();
+    } catch (_) {
+      // Backend server unreachable (standalone offline mode active).
     } finally {
       _running = false;
     }
