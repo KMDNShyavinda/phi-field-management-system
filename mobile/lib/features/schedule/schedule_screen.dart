@@ -18,6 +18,8 @@ import '../reports/monthly_report_screen.dart';
 import '../food_handlers/food_handlers_screen.dart';
 import '../samples/samples_screen.dart';
 import '../schools_clinics/schools_clinics_screen.dart';
+import '../../core/update_dialog.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 
@@ -54,10 +56,57 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     ref.invalidate(sessionProvider);
   }
 
+  Future<void> _checkForUpdates({bool silent = false}) async {
+    try {
+      if (!silent && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('යාවත්කාලීන පරීක්ෂා කරමින් පවතී... (Checking for updates...)'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      final updateService = ref.read(appUpdateServiceProvider);
+      final updateInfo = await updateService.checkForUpdate();
+      if (!mounted) return;
+
+      if (updateInfo != null) {
+        await UpdateDialog.show(
+          context,
+          updateInfo: updateInfo,
+          updateService: updateService,
+        );
+      } else if (!silent) {
+        final pkg = await PackageInfo.fromPlatform();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('ඔබගේ ඇප් එක නවතම සංස්කරණයයි! (v${pkg.version} is up to date ✅)'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!silent && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('යාවත්කාලීන පරීක්ෂා කිරීම අසාර්ථක විය: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(_sync);
+    Future.microtask(() async {
+      await _sync();
+      if (mounted) {
+        _checkForUpdates(silent: true);
+      }
+    });
   }
 
   @override
@@ -139,6 +188,11 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             tooltip: 'Complaints',
           ),
           IconButton(
+            onPressed: () => _checkForUpdates(silent: false),
+            icon: const Icon(Icons.system_update_rounded),
+            tooltip: 'Check for Updates (යාවත්කාලීන පරීක්ෂාව)',
+          ),
+          IconButton(
             onPressed: () async {
               final driveService = GoogleDriveService();
               await driveService.backupData(context);
@@ -186,7 +240,38 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (session != null) Text('${session.fullName} • ${session.mohArea}'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            if (session != null)
+                              Expanded(
+                                child: Text(
+                                  '${session.fullName} • ${session.mohArea}',
+                                  style: const TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            InkWell(
+                              onTap: () => _checkForUpdates(silent: false),
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.indigo.shade50,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: Colors.indigo.shade200),
+                                ),
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.system_update_rounded, size: 13, color: Colors.indigo),
+                                    SizedBox(width: 4),
+                                    Text('Check Update', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.indigo)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                         if (_status != null) Padding(padding: const EdgeInsets.only(top: 8), child: Text(_status!)),
                         const SizedBox(height: 16),
                         const DashboardStatsWidget(),

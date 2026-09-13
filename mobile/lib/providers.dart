@@ -7,6 +7,9 @@ import 'data/sync/sync_service.dart';
 import 'domain/models.dart';
 
 import 'core/notification_service.dart';
+import 'core/app_update_service.dart';
+
+final appUpdateServiceProvider = Provider<AppUpdateService>((ref) => AppUpdateService());
 
 final dbProvider = Provider<AppDatabase>((ref) => AppDatabase());
 

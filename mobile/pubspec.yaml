@@ -36,6 +36,8 @@ dependencies:
   googleapis_auth: ^2.3.3
   http: ^1.6.0
   archive: ^4.0.9
+  ota_update: ^7.1.0
+  package_info_plus: ^9.0.1
 
 dev_dependencies:
   flutter_test:
