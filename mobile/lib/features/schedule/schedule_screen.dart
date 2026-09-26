@@ -116,93 +116,25 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Schedule'),
+        title: const Text('PHI Smart Inspector'),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const AddPremiseScreen()));
             },
             icon: const Icon(Icons.add_business),
-            tooltip: 'Add Establishment',
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const OfflineMapScreen()));
-            },
-            icon: const Icon(Icons.map),
-            tooltip: 'Offline Maps',
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const LegalGuideScreen()));
-            },
-            icon: const Icon(Icons.gavel),
-            tooltip: 'Smart Legal Guide',
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const DengueTrackingScreen()));
-            },
-            icon: const Icon(Icons.pest_control),
-            tooltip: 'Dengue Hotspots & Tracking',
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const MonthlyReportScreen()));
-            },
-            icon: const Icon(Icons.picture_as_pdf),
-            tooltip: 'MOH Monthly Reports (PDF)',
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const FoodHandlersScreen()));
-            },
-            icon: const Icon(Icons.badge_outlined),
-            tooltip: 'Food Handlers Medical Certificates',
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const SamplesScreen()));
-            },
-            icon: const Icon(Icons.science_outlined),
-            tooltip: 'Water & Food Samples',
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const SchoolsClinicsScreen()));
-            },
-            icon: const Icon(Icons.school_outlined),
-            tooltip: 'Schools & Clinics (පාසල් සහ සායන)',
+            tooltip: 'Add Establishment (නව ව්‍යාපාරයක්)',
           ),
           IconButton(
             onPressed: _syncing ? null : _sync,
             icon: _syncing
                 ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                 : const Icon(Icons.cloud_sync),
+            tooltip: 'Refresh / Sync',
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const ComplaintListScreen()));
-            },
-            icon: const Icon(Icons.report_problem),
-            tooltip: 'Complaints',
-          ),
-          IconButton(
-            onPressed: () => _checkForUpdates(silent: false),
-            icon: const Icon(Icons.system_update_rounded),
-            tooltip: 'Check for Updates (යාවත්කාලීන පරීක්ෂාව)',
-          ),
-          IconButton(
-            onPressed: () async {
-              final driveService = GoogleDriveService();
-              await driveService.backupData(context);
-            },
-            icon: const Icon(Icons.cloud_upload),
-            tooltip: 'Backup to Google Drive',
-          ),
-          IconButton(onPressed: _logout, icon: const Icon(Icons.logout)),
         ],
       ),
+      drawer: _buildDrawer(context, session),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (_) => const ScanScreen()));
@@ -343,6 +275,162 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildDrawer(BuildContext context, SessionUser? session) {
+    return Drawer(
+      child: Column(
+        children: [
+          UserAccountsDrawerHeader(
+            decoration: const BoxDecoration(
+              color: Color(0xFF1B5E20),
+            ),
+            currentAccountPicture: const CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(Icons.health_and_safety, color: Color(0xFF1B5E20), size: 38),
+            ),
+            accountName: Text(
+              session?.fullName ?? 'PHI Officer',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            accountEmail: Text(
+              '${session?.mohArea ?? 'Colombo MOH'} • ${session?.email ?? 'phi@moh.lk'}',
+              style: const TextStyle(fontSize: 12, color: Colors.white70),
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                _buildSectionHeader('ක්ෂේත්‍ර පරීක්ෂණ (Field Inspections)'),
+                ListTile(
+                  leading: const Icon(Icons.add_business, color: Colors.teal),
+                  title: const Text('ව්‍යාපාර ලියාපදිංචිය (Add Premise)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const AddPremiseScreen()));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.map, color: Colors.green),
+                  title: const Text('සිතියම සහ ස්ථාන (Offline Maps)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const OfflineMapScreen()));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.school_outlined, color: Colors.blue),
+                  title: const Text('පාසල් සහ සායන (Schools & Clinics)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const SchoolsClinicsScreen()));
+                  },
+                ),
+
+                const Divider(),
+                _buildSectionHeader('මහජන සෞඛ්‍ය සහ නීති (Health & Legal)'),
+                ListTile(
+                  leading: const Icon(Icons.pest_control, color: Colors.deepOrange),
+                  title: const Text('ඩෙංගු පාලනය සහ Hotspots (Dengue)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const DengueTrackingScreen()));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.science_outlined, color: Colors.purple),
+                  title: const Text('ආහාර සහ ජල සාම්පල (Samples)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const SamplesScreen()));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.badge_outlined, color: Colors.amber),
+                  title: const Text('සේවක වෛද්‍ය සහතික (Food Handlers)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const FoodHandlersScreen()));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.gavel, color: Colors.brown),
+                  title: const Text('ආහාර පනත සහ නීති (Legal Guide)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const LegalGuideScreen()));
+                  },
+                ),
+
+                const Divider(),
+                _buildSectionHeader('වාර්තා සහ පැමිණිලි (Reports & Complaints)'),
+                ListTile(
+                  leading: const Icon(Icons.picture_as_pdf, color: Colors.indigo),
+                  title: const Text('MOH මාසික වාර්තාව (Monthly Report)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const MonthlyReportScreen()));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.report_problem, color: Colors.redAccent),
+                  title: const Text('මහජන පැමිණිලි (Complaints)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const ComplaintListScreen()));
+                  },
+                ),
+
+                const Divider(),
+                _buildSectionHeader('පද්ධතිය (System & Backup)'),
+                ListTile(
+                  leading: const Icon(Icons.cloud_upload, color: Colors.blueGrey),
+                  title: const Text('Google Drive Backup (දත්ත උපස්ථය)'),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    final driveService = GoogleDriveService();
+                    await driveService.backupData(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.system_update_rounded, color: Colors.teal),
+                  title: const Text('යාවත්කාලීන පරීක්ෂාව (Check Updates)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _checkForUpdates(silent: false);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.logout, color: Colors.red),
+                  title: const Text('පිටවීම (Logout)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _logout();
+                  },
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey.shade600,
+          letterSpacing: 0.5,
+        ),
       ),
     );
   }
