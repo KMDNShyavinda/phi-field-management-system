@@ -1,0 +1,17 @@
+PHI Smart Inspector is a 100% offline-first field management and health inspection application tailored for Public Health Inspectors (PHI) in Sri Lanka.
+
+Designed to eliminate tedious paperwork and function without an internet connection or central server, PHI Smart Inspector empowers field officers to execute statutory health duties directly on their Android devices.
+
+Key Features:
+• Establishment Directory & Field Inspections: Register food businesses, bakeries, pharmacies, and hotels with GPS coordinates and QR codes. Conduct Food Act compliance checklists with risk ratings.
+• Smart Legal Guide: Built-in legal reference with Food Act provisions, offense breakdowns, required court evidence, and magistrate prosecution steps (B-reports).
+• Digital Signatures: Dual touchscreen signatures (PHI and business owner) embedded directly into tamper-proof inspection reports.
+• Dengue Tracking Map: Real-time case logging with interactive OpenStreetMap GPS pin-pointing and dynamic 100-meter high-risk buffer zones.
+• Automated Monthly Performance Reports (PDF): One-click generation of standard Ministry of Health monthly inspection reports ready for printing or instant sharing.
+• Food Handlers' Health Certification: Track medical fitness certificates with automatic 30-day expiry notifications and 1-year renewal actions.
+• Water & Food Samples Tracking: Log sampling seals, Government Analyst/MRI dispatch tracking, and official laboratory report outcomes.
+• Schools & MCH Clinics Inspection: Monitor healthy school canteen circular compliance, vaccine cold-chain refrigeration temperatures (2°C - 8°C), and biomedical waste disposal.
+• Google Drive Backup: Daily one-tap compressed backup of the local SQLite database and photo evidence to personal Google Drive.
+• In-App Auto-Updater: Built-in update detector via GitHub Releases for seamless single-tap APK updates.
+
+No external servers or recurring subscriptions are required. All records are stored securely on the local device using SQLite.

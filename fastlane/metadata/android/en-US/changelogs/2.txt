@@ -1,0 +1,4 @@
+- Added Material 3 Navigation Drawer Menu
+- Integrated In-App Auto-Updater via GitHub Releases
+- Added Schools & Clinics Health Inspection module
+- Added offline standalone login mode
