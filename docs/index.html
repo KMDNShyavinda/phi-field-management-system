@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHI Smart Inspector | Download Android App (v0.2.0)</title>
+  <meta name="description" content="ශ්‍රී ලංකා මහජන සෞඛ්‍ය පරීක්ෂක (PHI) නිලධාරීන් සඳහාම නිර්මාණය වූ 100% Offline ක්ෂේත්‍ර කළමනාකරණ සහ පරීක්ෂණ යෙදුම. Download PHI Smart Inspector APK free.">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kmdnshyavinda.github.io/phi-field-management-system/">
+  <meta property="og:title" content="PHI Smart Inspector - Field Management Mobile App">
+  <meta property="og:description" content="100% Offline Health Inspection & Field Management System for Sri Lanka Public Health Inspectors.">
+  <meta property="og:image" content="assets/app_preview.jpg">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="#" class="brand">
+        <div class="brand-icon">
+          <!-- Medical Shield Icon -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <line x1="12" y1="8" x2="12" y2="16"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>PHI Smart Inspector</h1>
+          <span>Public Health Field System • SL</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="#features" class="nav-link">විශේෂාංග (Features)</a></li>
+          <li><a href="#install" class="nav-link">ස්ථාපනය (How to Install)</a></li>
+          <li><a href="#faq" class="nav-link">ගැටළු (FAQ)</a></li>
+          <li><a href="https://github.com/KMDNShyavinda/phi-field-management-system" target="_blank" class="nav-link">GitHub</a></li>
+          <li>
+            <a href="#download" class="btn btn-primary btn-nav">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download APK
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge-wrap">
+          <div class="badge badge-version">
+            <span class="pulse"></span>
+            Version 0.2.0 (Latest Release)
+          </div>
+          <div class="badge badge-offline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+              <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+              <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+              <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+              <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+              <line x1="12" y1="20" x2="12.01" y2="20"></line>
+            </svg>
+            100% Offline Capable
+          </div>
+          <div class="badge badge-foss">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+            Free & Open Source (MIT)
+          </div>
+        </div>
+
+        <h1 class="hero-title">
+          Smart Health Inspection, <br>
+          <span class="hero-title-highlight">Simplified in Your Pocket</span>
+        </h1>
+
+        <p class="hero-sinhala-lead">
+          ශ්‍රී ලංකා මහජන සෞඛ්‍ය පරීක්ෂක (PHI) නිලධාරීන්ගේ ක්ෂේත්‍ර රාජකාරි සඳහාම සකසන ලද ඩිජිටල් කළමනාකරණ යෙදුම.
+        </p>
+
+        <p class="hero-description">
+          ආහාර පනත යටතේ පරීක්ෂණ වාර්තා (H-800), අධිකරණ B-වාර්තා, ඩෙංගු අධි-අවදානම් කලාප සිතියම්ගත කිරීම සහ MOH මාසික වාර්තා ක්ෂණිකව ඔබගේ ඇන්ඩ්‍රොයිඩ් දුරකථනයෙන්ම සකසා ගන්න.
+        </p>
+
+        <div class="hero-actions">
+          <div class="hero-actions-main">
+            <a href="https://github.com/KMDNShyavinda/phi-field-management-system/releases/download/v0.2.0/app-release.apk" class="btn btn-primary btn-download-hero">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <div>
+                <span>Download APK (v0.2.0)</span>
+                <span class="btn-sub">Universal Build • 81.7 MB</span>
+              </div>
+            </a>
+
+            <a href="#download" class="btn btn-secondary">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+              </svg>
+              වෙනත් අනුවාද (More Options)
+            </a>
+          </div>
+
+          <div class="hero-qr-box">
+            <img 
+              src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https%3A%2F%2Fgithub.com%2FKMDNShyavinda%2Fphi-field-management-system%2Freleases%2Fdownload%2Fv0.2.0%2Fapp-release.apk" 
+              alt="Scan QR to download APK" 
+              class="qr-code-img"
+              loading="lazy"
+            >
+            <div class="qr-info">
+              <h4>ජංගම දුරකථනයෙන් Scan කරන්න</h4>
+              <p>ඔබ පරිගණකයෙන් පිවිසියේ නම්, ඔබගේ දුරකථන කැමරාව මෙම QR කේතයට යොමු කර කෙලින්ම APK එක දුරකථනයට බාගත කරගන්න.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-preview">
+        <div class="mockup-backdrop"></div>
+        <div class="phone-wrapper">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <img src="assets/app_preview.jpg" alt="PHI Smart Inspector App Dashboard Preview">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Ribbon -->
+  <section class="stats-ribbon">
+    <div class="container stats-grid">
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+        </div>
+        <div class="stat-number">100% Offline</div>
+        <div class="stat-label">Server නොමැතිව Field එකේදී වැඩ කළ හැක</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </div>
+        <div class="stat-number">MOH Ready</div>
+        <div class="stat-label">මාසික කාර්ය සාධන වාර්තා 1-Click PDF ලෙස</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <div class="stat-number">ඩිජිටල් අත්සන්</div>
+        <div class="stat-label">Touchscreen Dual Signatures embedded</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        <div class="stat-number">රු. 0.00</div>
+        <div class="stat-label">100% නොමිලේ විවෘත මූලාශ්‍ර (MIT)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Powerful Features</span>
+        <h2 class="section-title">ක්ෂේත්‍ර රාජකාරි සඳහා අවශ්‍ය සියල්ල එකම තැනක</h2>
+        <p class="section-subtitle">A complete suite of public health inspection tools engineered specifically for Sri Lanka PHI standards.</p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          </div>
+          <h3 class="feature-title">Establishment Directory</h3>
+          <div class="feature-title-si">ආපනශාලා සහ වෙළඳසැල් ලේඛනය</div>
+          <p class="feature-desc">ආපනශාලා, හෝටල්, බේකරි සහ නිෂ්පාදන ආයතන GPS ඛණ්ඩාංක සහ QR කේත සමඟ ලියාපදිංචි කර H-800 පරීක්ෂණ සිදුකිරීමේ පහසුකම.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"></path><rect x="3" y="6" width="6" height="5" rx="1"></rect><rect x="15" y="6" width="6" height="5" rx="1"></rect><path d="M6 11v4c0 1.5 2.5 2 6 2s6-.5 6-2v-4"></path></svg>
+          </div>
+          <h3 class="feature-title">Smart Legal Guide</h3>
+          <div class="feature-title-si">1980 අංක 26 ආහාර පනත & B-වාර්තා</div>
+          <p class="feature-desc">නීතිමය වගන්ති, වැරදි විස්තර, උසාවි සාක්ෂි ලැයිස්තු සහ මහේස්ත්‍රාත් අධිකරණ සඳහා B-වාර්තා පහසුවෙන්ම සම්පාදනය කිරීම.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+          </div>
+          <h3 class="feature-title">Dengue Hotspots & Buffers</h3>
+          <div class="feature-title-si">ඩෙංගු අධි-අවදානම් කලාප සිතියම</div>
+          <p class="feature-desc">ඩෙංගු රෝගීන් වාර්තා වූ ස්ථාන සටහන් කිරීම, OpenStreetMap සිතියම සහ මීටර් 100 අවදානම් කලාප (100m Buffer Zones) ස්වයංක්‍රීයව පෙන්වීම.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+          </div>
+          <h3 class="feature-title">Food Handlers Certification</h3>
+          <div class="feature-title-si">ආහාර හසුරුවන්නන්ගේ වෛද්‍ය සහතික</div>
+          <p class="feature-desc">ආහාර හසුරුවන්නන්ගේ වෛද්‍ය යෝග්‍යතා වාර්තා, වසරක වලංගු කාලය සහ දින 30 කට පෙර කල්ඉකුත් වීමේ නිවේදන ලබා දීම.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31"></path><path d="M14 2v7.31"></path><path d="M8.5 2h7"></path><path d="M14 9.3a6.5 6.5 0 1 1-4 0V2"></path></svg>
+          </div>
+          <h3 class="feature-title">Water & Food Sampling</h3>
+          <div class="feature-title-si">නියැදි සහ රස පරීක්ෂක වාර්තා</div>
+          <p class="feature-desc">රජයේ රස පරීක්ෂක (Govt Analyst) හා MRI වෙත යවන නියැදි මුද්‍රා අංක, යැවූ දිනයන් සහ රසායනාගාර වාර්තා ලුහුබැඳීම.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+          </div>
+          <h3 class="feature-title">Schools & MCH Clinics</h3>
+          <div class="feature-title-si">පාසල් ආපනශාලා සහ සායන පරීක්ෂාව</div>
+          <p class="feature-desc">පාසල් ආපනශාලා චක්‍රලේඛ අනුකූලතාවය සහ එන්නත් ශීතාගාර උෂ්ණත්ව (2°C - 8°C Cold-Chain) ක්‍රමානුකූලව පරීක්ෂා කිරීම.</p>
+        </div>
+
+        <!-- Feature 7 -->
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          </div>
+          <h3 class="feature-title">Cloud Backup & Export</h3>
+          <div class="feature-title-si">Google Drive ආරක්ෂිත Backup</div>
+          <p class="feature-desc">ඔබගේ දත්ත සහ ඡායාරූප සාක්ෂි පුද්ගලික Google Drive ගිණුමට එක ටැප් එකකින් සම්පීඩිත ZIP ගොනුවක් ලෙස Backup කර තබා ගැනීම.</p>
+        </div>
+
+        <!-- Feature 8 -->
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          </div>
+          <h3 class="feature-title">In-App Auto Updates</h3>
+          <div class="feature-title-si">ඇප් එක තුළින්ම Update වීම</div>
+          <p class="feature-desc">අනාගතයේ පැමිණෙන නව විශේෂාංග සහ නීතිමය යාවත්කාලීන කිරීම් කිසිදු වෙහෙසකින් තොරව App එක තුළින්ම update කරගන්න.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download Section -->
+  <section class="section section-download" id="download">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Install Now</span>
+        <h2 class="section-title">ඔබගේ දුරකථනයට ගැලපෙන APK එක බාගත කරන්න</h2>
+        <p class="section-subtitle">Choose the build best suited for your Android device.</p>
+      </div>
+
+      <div class="download-cards-grid">
+        <!-- Universal APK (Highlighted) -->
+        <div class="dl-card highlight">
+          <span class="dl-card-badge">Most Popular</span>
+          <h3>Universal APK</h3>
+          <div class="dl-target">ඕනෑම Android දුරකථනයක් සඳහා සුදුසුයි</div>
+          
+          <div class="dl-meta">
+            <div class="dl-meta-item">
+              <span>Version</span>
+              <strong>v0.2.0</strong>
+            </div>
+            <div class="dl-meta-item">
+              <span>Size</span>
+              <strong>81.7 MB</strong>
+            </div>
+            <div class="dl-meta-item">
+              <span>Android</span>
+              <strong>6.0+</strong>
+            </div>
+          </div>
+
+          <ul class="dl-features">
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              All processor architectures included
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Highest compatibility across all devices
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Single-file installation
+            </li>
+          </ul>
+
+          <a href="https://github.com/KMDNShyavinda/phi-field-management-system/releases/download/v0.2.0/app-release.apk" class="btn btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Download Universal APK
+          </a>
+        </div>
+
+        <!-- ARM64-v8a -->
+        <div class="dl-card">
+          <h3>ARM64-v8a APK</h3>
+          <div class="dl-target">නවීන 64-bit දුරකථන සඳහා (වේගවත් සහ කුඩා ගොනුවක්)</div>
+          
+          <div class="dl-meta">
+            <div class="dl-meta-item">
+              <span>Version</span>
+              <strong>v0.2.0</strong>
+            </div>
+            <div class="dl-meta-item">
+              <span>Size</span>
+              <strong>~29 MB</strong>
+            </div>
+            <div class="dl-meta-item">
+              <span>CPU</span>
+              <strong>64-bit</strong>
+            </div>
+          </div>
+
+          <ul class="dl-features">
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              65% smaller download size
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Optimized for modern smartphones
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Faster loading & memory usage
+            </li>
+          </ul>
+
+          <a href="https://github.com/KMDNShyavinda/phi-field-management-system/releases/latest" class="btn btn-secondary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Releases පිටුවෙන් බාගත කරන්න
+          </a>
+        </div>
+
+        <!-- GitHub Releases -->
+        <div class="dl-card">
+          <h3>GitHub Releases</h3>
+          <div class="dl-target">පැරණි අනුවාද සහ Source Code ලබා ගැනීමට</div>
+          
+          <div class="dl-meta">
+            <div class="dl-meta-item">
+              <span>Channel</span>
+              <strong>Stable</strong>
+            </div>
+            <div class="dl-meta-item">
+              <span>License</span>
+              <strong>MIT</strong>
+            </div>
+            <div class="dl-meta-item">
+              <span>Build</span>
+              <strong>Automated CI</strong>
+            </div>
+          </div>
+
+          <ul class="dl-features">
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Direct access to all APK assets
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              View detailed git commit changes
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              SHA-256 checksums available
+            </li>
+          </ul>
+
+          <a href="https://github.com/KMDNShyavinda/phi-field-management-system/releases/tag/v0.2.0" target="_blank" class="btn btn-secondary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            GitHub Releases බලන්න
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to Install Guide -->
+  <section class="section" id="install">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Easy Setup</span>
+        <h2 class="section-title">පියවරෙන් පියවර APK එක ස්ථාපනය (Install) කරන අයුරු</h2>
+        <p class="section-subtitle">A simple 4-step guide to installing the app on any Android device.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h4>Download APK</h4>
+          <div class="step-si">APK ගොනුව බාගත කරන්න</div>
+          <p>ඉහත ඇති <strong>Download Universal APK</strong> බොත්තම ඔබන්න හෝ QR කේතය ඔබගේ දුරකථන කැමරාවෙන් Scan කරන්න.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h4>Open Downloaded File</h4>
+          <div class="step-si">බාගත වූ ගොනුව Open කරන්න</div>
+          <p>බාගත වීම අවසන් වූ පසු Notification තීරුවේ ඇති පණිවිඩය මත හෝ ඔබගේ <strong>Downloads</strong> ෆෝල්ඩරයේ ඇති ගොනුව මත tap කරන්න.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h4>Allow Unknown Apps</h4>
+          <div class="step-si">අවශ්‍ය අවසරය (Permission) ලබා දෙන්න</div>
+          <p>Android පද්ධතිය "File might be harmful" හෝ ආරක්ෂක විමසීමක් පෙන්වුවහොත්, <strong>Settings &rarr; Allow from this source</strong> සක්‍රිය කරන්න.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <h4>Install & Open</h4>
+          <div class="step-si">ස්ථාපනය කර App එක අරඹන්න</div>
+          <p><strong>Install</strong> ඔබා ක්‍රියාවලිය සම්පූර්ණ කරන්න. පසුව යෙදුම විවෘත කර Offline Login එක හරහා ක්ෂණිකව රාජකාරි ආරම්භ කරන්න.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Got Questions?</span>
+        <h2 class="section-title">නිතර අසන ප්‍රශ්න (Frequently Asked Questions)</h2>
+        <p class="section-subtitle">Common questions regarding offline usage, security, and updates.</p>
+      </div>
+
+      <div class="faq-grid">
+        <div class="faq-item active">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>මෙම ඇප් එක භාවිතයට මුදල් ගෙවිය යුතුද? (Is it free?)</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            <p>නැත, කිසිදු මුදලක් ගෙවිය යුතු නොවේ. PHI Smart Inspector යනු ශ්‍රී ලංකාවේ මහජන සෞඛ්‍ය පරීක්ෂක නිලධාරීන්ගේ රාජකාරි පහසුව උදෙසා MIT License යටතේ නිදහසේ ලබා දී ඇති 100% නොමිලේ විවෘත මූලාශ්‍ර (Free & Open Source) මෘදුකාංගයකි.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>ක්ෂේත්‍රයේදී Internet (දත්ත සම්බන්ධතාවයක්) නොමැතිව වැඩ කළ හැකිද?</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            <p>ඔව්, සම්පූර්ණයෙන්ම offline ක්‍රියාත්මක වේ! පරිශීලක තොරතුරු, ආයතන ලේඛන, පරීක්ෂණ වාර්තා (H-800) සහ චෙක්ලිස්ට් සියල්ල ඔබගේ දුරකථනයේ ඇති ආරක්ෂිත SQLite දත්ත ගබඩාවේ තැන්පත් වේ. Server එකක් හෝ අන්තර්ජාලය අවශ්‍ය නොවේ.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>APK එක බාගත කිරීමේදී "File might be harmful" ලෙස පෙන්වන්නේ ඇයි?</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Google Play Store නොවන ඕනෑම විශ්වාසදායී මූලාශ්‍රයකින් (උදා: GitHub) APK එකක් බාගත කරන විට Android පද්ධතිය විසින් පෙන්වන සාමාන්‍ය අනතුරු ඇඟවීමකි. මෙම App එකේ සම්පූර්ණ Codebase එක GitHub හි ඕනෑම අයෙකුට පරීක්ෂා කළ හැකි අතර කිසිදු අහිතකර හෝ ඔත්තු බලන කේත අඩංගු නොවේ.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>නව Updates (යාවත්කාලීන කිරීම්) ලැබෙන්නේ කෙසේද?</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            <p>App එක තුළටම <strong>In-App Auto-Updater</strong> එකතු කර ඇත. නව සංස්කරණයක් නිකුත් වූ විට App එක විවෘත කිරීමේදී "New Update Available" ලෙස තිරයේ දිස් වන අතර, "Update Now" ඔබා එක ක්ලික් එකකින් අලුත්ම අනුවාදයට මාරු විය හැක.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h2>PHI Smart Inspector</h2>
+          <p>
+            ශ්‍රී ලංකා සෞඛ්‍ය අමාත්‍යාංශයේ මහජන සෞඛ්‍ය පරීක්ෂක (PHI) නිලධාරීන්ගේ රාජකාරී කාර්යක්ෂමතාව ඉහළ නැංවීම සඳහා නිර්මාණය කරන ලද විවෘත මූලාශ්‍ර ක්ෂේත්‍ර කළමනාකරණ පද්ධතිය.
+          </p>
+        </div>
+
+        <div class="footer-links">
+          <h4>ඉක්මන් සබැඳි</h4>
+          <ul>
+            <li><a href="#features">ප්‍රධාන විශේෂාංග</a></li>
+            <li><a href="#download">APK බාගත කිරීම</a></li>
+            <li><a href="#install">ස්ථාපනය කරන අයුරු</a></li>
+            <li><a href="#faq">නිතර අසන ප්‍රශ්න</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Open Source & Code</h4>
+          <ul>
+            <li><a href="https://github.com/KMDNShyavinda/phi-field-management-system" target="_blank">GitHub Repository</a></li>
+            <li><a href="https://github.com/KMDNShyavinda/phi-field-management-system/releases" target="_blank">Releases & Changelogs</a></li>
+            <li><a href="https://github.com/KMDNShyavinda/phi-field-management-system/issues" target="_blank">Report an Issue</a></li>
+            <li><a href="https://github.com/KMDNShyavinda/phi-field-management-system/blob/main/LICENSE" target="_blank">MIT License</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 PHI Field Management System. Released under the MIT Open Source License.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleFaq(button) {
+      const item = button.parentElement;
+      item.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>

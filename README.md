@@ -1,5 +1,12 @@
 # PHI Smart Inspector
 
+[![Download APK](https://img.shields.io/badge/Download-APK%20(v0.2.0)-1B5E20?style=for-the-badge&logo=android)](https://github.com/KMDNShyavinda/phi-field-management-system/releases/tag/v0.2.0)
+[![Web Page](https://img.shields.io/badge/Web%20Download%20Page-Live%20Site-blue?style=for-the-badge&logo=github)](https://kmdnshyavinda.github.io/phi-field-management-system/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+
+> **📱 Mobile Web Download Page:** [https://kmdnshyavinda.github.io/phi-field-management-system/](https://kmdnshyavinda.github.io/phi-field-management-system/)  
+> **📦 Latest APK Release (v0.2.0):** [Direct Download](https://github.com/KMDNShyavinda/phi-field-management-system/releases/download/v0.2.0/app-release.apk)
+
 Offline-first field app for Public Health Inspectors in Sri Lanka. Officers log in once, then complete inspections (QR lookup, checklist, geotagged photos, dual signatures, PDF) without a network. Records sync when connectivity returns.
 
 ## Stack
